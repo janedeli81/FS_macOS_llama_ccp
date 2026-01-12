@@ -1,27 +1,16 @@
-@"
+﻿venv/
 .venv/
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
-# PyInstaller
 build/
 dist/
-*.spec.bak
 
-# Local app data / outputs
-output_summaries/
-extracted_documents/
-llm_models/
-*.gguf
-
-# OS junk
 .DS_Store
 __MACOSX/
 ._*
 
-# IDE
-.vscode/
-.idea/
-"@ | Out-File -Encoding utf8 .gitignore
+*.gguf
+llm_models/
+output_summaries/
+extracted_documents/
