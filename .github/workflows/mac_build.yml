@@ -5,10 +5,6 @@ on:
     branches:
       - master
 
-concurrency:
-  group: notarize-macos-master
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: macos-14
@@ -26,22 +22,21 @@ jobs:
           python-version: "3.10"
           cache: "pip"
 
+      # Optional but helpful if llama-cpp-python builds from source
       - name: Install system dependencies (cmake)
         run: |
           set -euo pipefail
-          if ! command -v cmake >/dev/null 2>&1; then
-            brew install cmake
-          fi
+          brew update
+          brew install cmake || true
 
       - name: Install Python dependencies
         env:
+          # Set to "1" if you want to compile llama-cpp-python with Metal.
+          # CPU-only is usually more stable for first client tests.
           LLAMA_METAL: "0"
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip setuptools wheel
-
-          # Avoid silent source-builds that can bloat the app
-          python -m pip install --only-binary=:all: llama-cpp-python
 
           if [ "${LLAMA_METAL}" = "1" ]; then
             export CMAKE_ARGS="-DLLAMA_METAL=on"
@@ -50,6 +45,7 @@ jobs:
 
           python -m pip install -r requirements.txt
 
+          # Sanity import checks
           python -c "import llama_cpp; print('llama_cpp OK')"
           python -c "import PyQt5; print('PyQt5 OK')"
 
@@ -58,16 +54,7 @@ jobs:
           set -euo pipefail
           pyinstaller forensic_summarizer.spec
 
-      - name: Cleanup bundle before signing (remove dSYM, caches)
-        run: |
-          set -euo pipefail
-          APP_PATH="dist/forensic_summarizer.app"
-
-          find "$APP_PATH" -name "*.dSYM" -print -exec rm -rf {} + || true
-          find "$APP_PATH" -name "__pycache__" -type d -print -exec rm -rf {} + || true
-          find "$APP_PATH" -name "*.pyc" -type f -print -delete || true
-
-      - name: Sanity check build output (size + binaries + listing)
+      - name: Sanity check build output (size + gguf + binaries)
         run: |
           set -euo pipefail
           APP_PATH="dist/forensic_summarizer.app"
@@ -81,7 +68,16 @@ jobs:
           echo "=== Binary count (.dylib/.so/.bundle) ==="
           find "$APP_PATH" -type f \( -name "*.dylib" -o -name "*.so" -o -name "*.bundle" \) | wc -l || true
 
-          echo "=== Contents/MacOS (sizes) ==="
+          echo "=== Search for .gguf inside .app (should be empty) ==="
+          find "$APP_PATH" -name "*.gguf" -print || true
+
+          echo "=== App bundle structure (top) ==="
+          find "$APP_PATH" -maxdepth 3 -print || true
+
+          echo "=== Contents ==="
+          ls -la "$APP_PATH/Contents" || true
+
+          echo "=== Contents/MacOS ==="
           ls -la "$APP_PATH/Contents/MacOS" || true
 
       # --- SIGNING KEYCHAIN SETUP ---
@@ -119,6 +115,7 @@ jobs:
           set -euo pipefail
           KEYCHAIN_PATH="${KEYCHAIN_PATH}"
 
+          echo "=== Available code signing identities in temporary keychain ==="
           security find-identity -p codesigning -v "$KEYCHAIN_PATH" || true
 
           SIGN_IDENTITY="$(security find-identity -p codesigning -v "$KEYCHAIN_PATH" \
@@ -188,20 +185,6 @@ jobs:
           echo "=== Notary zip size ==="
           du -sh "dist/forensic_summarizer-notary.zip" || true
 
-      - name: Notary precheck (history)
-        env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-        run: |
-          set -euo pipefail
-          echo "=== Notary history (latest) ==="
-          xcrun notarytool history \
-            --apple-id "$APPLE_ID" \
-            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID" \
-            --output-format json || true
-
       - name: Submit to Apple notarization (capture submission id)
         id: notarize_submit
         env:
@@ -247,6 +230,7 @@ jobs:
 
           echo "Polling notarization status (id=$SUBMISSION_ID)..."
 
+          # Total max wait: 180 minutes, poll every 2 minutes
           MAX_SECONDS=$((180*60))
           INTERVAL=120
           ELAPSED=0
@@ -305,6 +289,7 @@ jobs:
           echo "=== Final zip size ==="
           du -sh "dist/forensic_summarizer.app.zip" || true
 
+      # --- RELEASE ---
       - name: Create GitHub Release (draft)
         id: create_release
         uses: actions/create-release@v1
