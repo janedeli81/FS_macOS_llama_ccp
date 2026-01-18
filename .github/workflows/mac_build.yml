@@ -31,19 +31,24 @@ jobs:
 
       - name: Install Python dependencies
         env:
-          # Set to "1" if you want to compile llama-cpp-python with Metal.
-          # CPU-only is usually more stable for first client tests.
-          LLAMA_METAL: "0"
+          # Set to "1" to force Metal-enabled llama-cpp-python wheel.
+          # Set to "0" for CPU-only (usually more stable, but no GPU acceleration).
+          LLAMA_METAL: "1"
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip setuptools wheel
 
-          if [ "${LLAMA_METAL}" = "1" ]; then
-            export CMAKE_ARGS="-DLLAMA_METAL=on"
-            export FORCE_CMAKE=1
-          fi
-
+          # Install project requirements first (may include llama-cpp-python; we override below if needed)
           python -m pip install -r requirements.txt
+
+          # Force Metal-enabled llama-cpp-python wheel on macOS
+          if [ "${LLAMA_METAL}" = "1" ]; then
+            python -m pip install --upgrade --force-reinstall --no-cache-dir llama-cpp-python \
+              --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/metal
+
+            # Print build/system info (helps confirm Metal backend)
+            python -c "from llama_cpp import llama_print_system_info; llama_print_system_info()"
+          fi
 
           # Sanity import checks
           python -c "import llama_cpp; print('llama_cpp OK')"

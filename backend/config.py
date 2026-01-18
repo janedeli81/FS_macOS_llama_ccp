@@ -140,7 +140,12 @@ LCPP_BATCH = int(os.environ.get("FS_LCPP_BATCH", "8" if sys.platform == "darwin"
 
 # GPU layers:
 # - Keep 0 by default for packaged mac builds unless you've tested Metal well.
-LCPP_GPU_LAYERS = int(os.environ.get("FS_LCPP_GPU_LAYERS", "0"))
+# GPU layers:
+# On macOS prefer Metal by default. Override via FS_LCPP_GPU_LAYERS.
+_default_gpu_layers = -1 if sys.platform == "darwin" else 0
+LCPP_GPU_LAYERS = int(os.environ.get("FS_LCPP_GPU_LAYERS", str(_default_gpu_layers)))
+
+# LCPP_GPU_LAYERS = int(os.environ.get("FS_LCPP_GPU_LAYERS", "0"))
 
 # mmap:
 # - Disabled by default on macOS for stability in notarized apps (override if needed).

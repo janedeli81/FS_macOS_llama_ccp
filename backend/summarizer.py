@@ -117,6 +117,14 @@ def _get_llm():
         if not mp.exists():
             raise FileNotFoundError(f"LLM model not found: {mp}")
 
+        # Print llama.cpp build/system info (helps confirm Metal backend in logs)
+        try:
+            from llama_cpp import llama_print_system_info  # type: ignore
+            if bool(LCPP_VERBOSE):
+                llama_print_system_info()
+        except Exception:
+            pass
+
         # IMPORTANT:
         # Keep n_gpu_layers=0 by default for packaged mac builds unless you tested Metal carefully.
         _llm = Llama(
