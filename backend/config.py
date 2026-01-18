@@ -118,41 +118,42 @@ def get_model_path() -> Path:
 MODEL_PATH = get_model_path()
 
 # --------------------------------------------------------------------
-# llama-cpp-python runtime knobs (stability-first defaults for macOS)
+# llama-cpp-python runtime knobs
 # Env overrides:
 #   FS_LCPP_THREADS, FS_LCPP_BATCH, FS_LCPP_GPU_LAYERS,
 #   FS_LCPP_USE_MMAP, FS_LCPP_USE_MLOCK, FS_LCPP_VERBOSE
 # --------------------------------------------------------------------
 def _default_threads() -> int:
     """
-    Conservative defaults to reduce native ggml crashes on macOS.
+    Performance-oriented defaults for macOS Metal builds.
+    Keep it reasonable to avoid oversubscription.
     """
+    cpu = os.cpu_count() or 8
+
     if sys.platform == "darwin":
-        return 1
-    cpu = os.cpu_count() or 4
+        # Roughly half the cores, capped.
+        return max(2, min(8, cpu // 2))
+
     return max(1, min(8, int(cpu)))
 
 
 LCPP_THREADS = int(os.environ.get("FS_LCPP_THREADS", str(_default_threads())))
 
-# Smaller batch reduces peak memory and lowers crash risk in some mac builds.
-LCPP_BATCH = int(os.environ.get("FS_LCPP_BATCH", "8" if sys.platform == "darwin" else "16"))
+# Batch size: higher can improve throughput; keep moderate for stability.
+LCPP_BATCH = int(os.environ.get("FS_LCPP_BATCH", "32" if sys.platform == "darwin" else "16"))
 
 # GPU layers:
-# - Keep 0 by default for packaged mac builds unless you've tested Metal well.
-# GPU layers:
-# On macOS prefer Metal by default. Override via FS_LCPP_GPU_LAYERS.
+# macOS default: enable Metal GPU.
+#   0   -> CPU-only
+#   -1  -> try to offload all layers to GPU
 _default_gpu_layers = -1 if sys.platform == "darwin" else 0
 LCPP_GPU_LAYERS = int(os.environ.get("FS_LCPP_GPU_LAYERS", str(_default_gpu_layers)))
 
-# LCPP_GPU_LAYERS = int(os.environ.get("FS_LCPP_GPU_LAYERS", "0"))
-
 # mmap:
-# - Disabled by default on macOS for stability in notarized apps (override if needed).
+# Disabled by default on macOS for notarized app stability (override if you want).
 LCPP_USE_MMAP = os.environ.get("FS_LCPP_USE_MMAP", "0" if sys.platform == "darwin" else "1").strip() == "1"
 
 # mlock:
-# - Usually off; can help performance but sometimes causes permission issues.
 LCPP_USE_MLOCK = os.environ.get("FS_LCPP_USE_MLOCK", "0").strip() == "1"
 
 # Verbose llama.cpp logs:
