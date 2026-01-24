@@ -1,43 +1,46 @@
 Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat een (eerder) Pro Justitia-rapport inhoudelijk samen.
+Doel: vat een Pro Justitia-rapport inhoudelijk samen (deskundige bevindingen), met hoogstens een korte dossiercontext.
 
 HARD REGELS (anti-hallucinatie)
 - Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
-- Noem geen persoonsgegevens; gebruik "betrokkene".
+- Gebruik géén nieuwe namen (zoals "Dr. A"). Als de tekst placeholders gebruikt (bv. [betrokkene 3], [datum 12]), behoud die exact.
+- Noem geen persoonsgegevens; gebruik "betrokkene", "aangever", "slachtoffer".
 - Noem het delict/feit alleen als het letterlijk zo in de tekst staat (geen interpretaties).
 - Als iets niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
+- Als datum/plaats in de vorm [datum X] / [woonplaats X] voorkomt, beschouw dat als "vermeld" (dus niet: "geen datum genoemd").
 - Geen procedure/parketnummers/wetsartikelen.
+- Geen speculatie: geen "mogelijk", "suggereert", "waarschijnlijk", "lijkt" tenzij letterlijk geciteerd uit de bron.
 
-EVIDENCE-REGEL (alleen voor MAP)
-- Elke belangrijke feitelijke bewering in MAP moet een korte onderbouwing hebben: (bewijs: "...").
-- Gebruik 3–12 woorden uit de bron; geen bewijs = niet opnemen.
+BRON-REGEL (heel belangrijk)
+- Scheid strikt:
+  A) Deskundigenrapport (psychiater/psycholoog): onderzoek, medewerking, klinische bevindingen, (geen/wel) diagnose, (geen/wel) advies.
+  B) Dossier/proces-verbaal: feiten over incident/letsel/telefooncontact. Dit mag slechts kort als context (max 1 korte alinea).
 
 OPDRACHT (MAP)
-Maak bullets met alleen bewezen feiten uit deze passage.
+Maak bullets met feiten uit deze passage, gescheiden per bron.
 
 FORMAT (bullets)
-- Rapportgegevens (datum/auteur/bron; alleen als genoemd) (bewijs: "..."):
-- Onderzoek/medewerking en bronnen (bv. dossier, gesprekken, opvragen info) (bewijs: "..."):
-- Observaties/klachten/symptomen (bewijs: "..."):
-- Diagnostiek/diagnose/hypothesen (alleen als genoemd) (bewijs: "..."):
-- Beperkingen/tekort aan info (bv. weigering, ontbrekende gegevens) (bewijs: "..."):
-- Risico/recidive-inschatting (als genoemd) (bewijs: "..."):
-- Advies/maatregelen/behandeling (als genoemd) (bewijs: "..."):
-- Delict/incident (max 1 bullet, alleen letterlijk benoemd, geen details) (bewijs: "..."):
+A) Deskundigenrapport
+- Rapportgegevens (datum/rol/auteur; alleen als genoemd):
+- Onderzoek en bronnen (bv. dossier, gesprekken, opvragen info; alleen als genoemd):
+- Medewerking/beperkingen (weigering, ontbrekende gegevens):
+- Klinische bevindingen/observaties/voorgeschiedenis (als genoemd):
+- Diagnostiek/diagnose/hypothesen (alleen als genoemd; anders: "niet vermeld"):
+- Risico/recidive (als genoemd; anders: "niet vermeld"):
+- Advies/maatregelen/behandeling (als genoemd; anders: "niet vermeld"):
+
+B) Dossiercontext (max 2 bullets totaal)
+- Kern van verdenking/incident in 1–2 zinnen (alleen letterlijk uit dossier):
+- Relevante dossierdetails (max 1 bullet; alleen als expliciet en relevant):
 
 ---REDUCE---
 Schrijf een professionele PJ-samenvatting op basis van de bullets.
 
-BELANGRIJK VOOR REDUCE
-- Verwijder alle "(bewijs: ...)" uit de eindtekst.
-- Neem alleen informatie op die in de bullets staat.
-- Schrijf doorlopende tekst (geen bullets).
-
-EINDTEKST (structuur en lengte)
-- 4–6 korte alinea’s.
-1) Kader: soort rapport, rol deskundigen, context (alleen wat genoemd is).
-2) Onderzoek en medewerking: wat is gedaan en welke beperkingen waren er.
-3) Klinische bevindingen/observaties en eventuele voorgeschiedenis (als genoemd).
-4) Diagnostiek/diagnose/hypothesen (alleen als genoemd; anders: "niet vermeld").
-5) Risico/advies/aanbevelingen (als genoemd).
-- Delict/incident hooguit 1–2 zinnen en alleen letterlijk benoemd.
+EINDTEKST
+- 4–6 korte alinea’s, doorlopende tekst (geen bullets).
+1) Kader: soort rapport en wie (alleen wat genoemd is).
+2) Onderzoek + medewerking + beperkingen.
+3) Klinische bevindingen/voorgeschiedenis (als genoemd).
+4) Diagnostiek/diagnose (of: "niet vermeld") + risicotaxatie (of: "niet vermeld").
+5) Advies/aanbevelingen (of: "niet vermeld").
+6) (Optioneel) zeer korte dossiercontext (max 1 alinea; geen details, geen speculatie).
