@@ -1,3 +1,29 @@
-Geef in maximaal 5 zinnen: wat betrokkene over het feit vertelde (bekent/ontkent/bagatelliseert),
-middelengebruik, psychiatrische symptomen of aanwijzingen, indruk bij onderzoek,
-bereidheid tot Pro Justitia en een kort advies. Noem geen delictbeschrijving.
+Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+Doel: vat de klinische inhoud van een consult/verslag samen.
+
+HARD REGELS (anti-hallucinatie)
+- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
+- Als iets niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
+- Noem geen persoonsgegevens; gebruik "betrokkene".
+- Geef géén inhoudelijke delictbeschrijving. Als delictdetails voorkomen: noem dit algemeen ("het ten laste gelegde") en ga door met klinische inhoud.
+- Geen procedure/parketnummers/wetsartikelen.
+
+OPDRACHT (MAP)
+Noteer kernpunten uit deze passage als bullets (kort, feitelijk).
+
+FORMAT (bullets)
+- Contact/werkhouding:
+- Psychiatrische symptomen (stemming/angst/psychose/impulsiviteit etc.):
+- Cognitie/realiteitstoetsing/affect:
+- Middelengebruik (alleen als genoemd; hoeveelheid/frequentie indien vermeld):
+- Suïcidaliteit/agressie/veiligheid (alleen als genoemd):
+- Behandeling/medicatie/zorgcontact (alleen als genoemd):
+- Beoordeling/advies (alleen als genoemd):
+
+---REDUCE---
+Je combineert de bullets tot één consultsamenvatting.
+
+EINDTEKST
+- 1–2 alinea’s, professioneel en to-the-point.
+- Benoem: klinische indruk, middelengebruik (als genoemd), veiligheid/risico (als genoemd), en advies/plan (als aanwezig).
+- Geen delictbeschrijving, geen procedure, geen meta-tekst.

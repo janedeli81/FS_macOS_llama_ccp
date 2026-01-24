@@ -1,3 +1,26 @@
-Noem in 3–6 regels: eerst de openstaande zaken (zonder het huidige feit),
-daarna de afgedane zaken met jaar en opgelegde straf/maatregel.
-Noem de aard van de delicten. Laat vrijspraken weg. Wees beknopt en concreet.
+Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+Doel: vat een uittreksel justitiële documentatie (UJD) gestructureerd samen.
+
+HARD REGELS (anti-hallucinatie)
+- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
+- Als details ontbreken: laat ze weg (schrijf niet "onbekend" als het niet nodig is).
+- Noem geen persoonsgegevens; gebruik "betrokkene".
+- Geen procedurele tekst; focus alleen op vermeldingen (feiten/afdoeningen/maatregelen) zoals genoemd.
+
+OPDRACHT (MAP)
+Extraheer vermeldingen uit deze passage en noteer ze compact.
+
+FORMAT
+Openstaand (indien genoemd):
+- [jaar/periode] – [aard/soort] – [status/maatregel] (alleen wat letterlijk genoemd is)
+
+Afgedaan (indien genoemd):
+- [jaar/periode] – [aard/soort] – [afdoening/straf/maatregel] (alleen wat letterlijk genoemd is)
+
+---REDUCE---
+Combineer alle items tot één overzicht.
+
+EINDTEKST
+- Kopjes: "Openstaande zaken" en "Afgedane zaken" (alleen als relevant).
+- Groepeer per jaar/periode, consistent.
+- Compact en feitelijk; geen interpretaties, geen extra toelichting.

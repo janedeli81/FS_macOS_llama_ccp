@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: macos-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: macos-14
@@ -235,22 +239,36 @@ jobs:
 
           echo "Polling notarization status (id=$SUBMISSION_ID)..."
 
-          # Total max wait: 180 minutes, poll every 2 minutes
+          # Total max wait: 180 minutes, poll every 5 minutes
           MAX_SECONDS=$((180*60))
-          INTERVAL=120
+          INTERVAL=300
           ELAPSED=0
 
           while [ $ELAPSED -lt $MAX_SECONDS ]; do
+            echo "Checking status... (elapsed ${ELAPSED}s)"
+
+            # Do NOT fail the step on transient network errors/timeouts
+            set +e
             JSON_INFO="$(xcrun notarytool info "$SUBMISSION_ID" \
               --apple-id "$APPLE_ID" \
               --password "$APPLE_APP_SPECIFIC_PASSWORD" \
               --team-id "$APPLE_TEAM_ID" \
-              --output-format json)"
+              --output-format json 2>&1)"
+            RC=$?
+            set -e
+
+            if [ $RC -ne 0 ]; then
+              echo "WARNING: notarytool info failed (exit=$RC). Will retry."
+              echo "$JSON_INFO"
+              sleep $INTERVAL
+              ELAPSED=$((ELAPSED + INTERVAL))
+              continue
+            fi
 
             echo "$JSON_INFO"
 
-            STATUS="$(echo "$JSON_INFO" | python -c "import sys,json; print(json.load(sys.stdin).get('status',''))")"
-            echo "Status: $STATUS (elapsed ${ELAPSED}s)"
+            STATUS="$(echo "$JSON_INFO" | python -c "import sys,json; print(json.load(sys.stdin).get('status',''))" 2>/dev/null || echo "")"
+            echo "Status: ${STATUS:-<empty>} (elapsed ${ELAPSED}s)"
 
             if [ "$STATUS" = "Accepted" ]; then
               echo "Notarization accepted."
@@ -259,6 +277,7 @@ jobs:
 
             if [ "$STATUS" = "Invalid" ]; then
               echo "Notarization invalid. Fetching log..."
+              set +e
               xcrun notarytool log "$SUBMISSION_ID" \
                 --apple-id "$APPLE_ID" \
                 --password "$APPLE_APP_SPECIFIC_PASSWORD" \
@@ -272,6 +291,7 @@ jobs:
 
           echo "Timed out waiting for notarization after 180 minutes."
           echo "Fetching log (may fail if still In Progress)..."
+          set +e
           xcrun notarytool log "$SUBMISSION_ID" \
             --apple-id "$APPLE_ID" \
             --password "$APPLE_APP_SPECIFIC_PASSWORD" \

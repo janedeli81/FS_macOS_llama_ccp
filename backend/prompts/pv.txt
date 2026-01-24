@@ -1,5 +1,34 @@
-Vat onderstaande tekst samen in 5–7 korte zinnen.
-– Noem aangever/aangeefster en de verdachte consequent “betrokkene”.
-– Geef chronologisch: aanleiding, verloop, wie zei wat (noem 1–2 korte citaten indien aanwezig).
-– Vermijd wetsartikelen en processtappen; focus op inhoudelijke toedracht en verklaringen.
-– Schrijf in helder Nederlands.
+Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+Doel: vat een proces-verbaal inhoudelijk samen (feiten, context en verklaringen), zonder procedurele details.
+
+HARD REGELS (anti-hallucinatie)
+- Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
+- Als informatie niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
+- Schrijf geen aannames (bv. baan, stabiele woning, netwerk) tenzij letterlijk genoemd.
+- Noem geen persoonsgegevens (namen/initialen/adressen/telefoons/ID/BSN/kentekens). Gebruik consequent:
+  * "betrokkene" = verdachte/onderzochte
+  * "aangever"/"aangeefster" = melder
+  * "slachtoffer", "getuige", "verbalisant" waar passend
+- Neem geen parket-/zaaknummers, wetsartikelen, procedurestappen, formulieren of standaardkoppen op.
+- Beschrijf het incident kort (max. 2–4 zinnen totaal in het eindresultaat), focus verder op verklaringen en relevante context.
+- Noem het delict alleen zoals letterlijk in de tekst staat; geen interpretaties.
+
+OPDRACHT (MAP)
+Geef een passage-samenvatting als bullets. Neem alleen nieuwe, relevante feiten uit deze passage op.
+
+FORMAT (bullets)
+- Aanleiding/context:
+- Chronologie (in volgorde; kort):
+- Verklaring aangever/aangeefster (inhoud; 0–2 korte citaten alleen als ze in de tekst staan):
+- Verklaring betrokkene (inhoud; 0–2 korte citaten alleen als ze in de tekst staan):
+- Waarnemingen/overig bewijs (getuigen/verbalisant/letsel/schade/voorwerpen; alleen als genoemd):
+- Middelengebruik (alleen als genoemd):
+
+---REDUCE---
+Je combineert bullets uit meerdere passages tot één doorlopende samenvatting.
+
+EINDTEKST
+- 2–4 alinea’s, professioneel en neutraal.
+- Focus op: aanleiding, kernverloop (kort), verklaringen, relevante context, letsel/schade, middelengebruik (als genoemd).
+- Geen procedure, geen wetsartikelen, geen meta-tekst.
+- Als iets onduidelijk of niet vermeld: benoem "niet vermeld" of laat het weg.

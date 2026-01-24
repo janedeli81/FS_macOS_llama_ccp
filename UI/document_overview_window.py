@@ -1,6 +1,8 @@
 # UI/document_overview_window.py
 
 import sys
+from typing import Optional, List, Tuple
+
 from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
@@ -14,27 +16,54 @@ from PyQt5.QtWidgets import (
     QApplication,
     QFrame,
     QSizePolicy,
+    QCheckBox,
+    QMessageBox,
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-from backend.config import OUTPUT_DIR
+from backend.state import AppState, DocumentState
 from UI.ui_theme import apply_window_theme
 
 
+# (code, label)
+DOC_TYPE_OPTIONS: List[Tuple[str, str]] = [
+    ("PV", "Proces-verbaal"),
+    ("VC", "Verhoor / VC"),
+    ("RECLASS", "Reclasseringsrapport"),
+    ("UJD", "UJD"),
+    ("PJ", "Oude PJ rapportage"),
+    ("TLL", "TLL rapport"),
+    ("UNKNOWN", "Onbekend"),
+]
+
+class NoWheelComboBox(QComboBox):
+    # All comments intentionally in English.
+    def wheelEvent(self, event):
+        # Ignore mouse wheel to prevent accidental value changes while scrolling.
+        event.ignore()
+
 class DocumentOverviewWindow(QWidget):
-    def __init__(self):
+    """
+    Documents Manager:
+    - shows detected document types
+    - allows override type + select documents
+    - button "Archief (case) aanmaken" queues selected docs and navigates to summaries table
+    """
+
+    def __init__(self, state: Optional[AppState] = None):
         super().__init__()
 
-        self.setWindowTitle("Documentoverzicht")
+        self.state = state
+        self.setWindowTitle("Documenten beheren")
         self.setMinimumSize(1100, 720)
         self._center_on_screen()
 
         self.document_widgets = []
         self._build_ui()
-        self.load_documents()
-
         apply_window_theme(self)
+
+        self.load_documents()
 
     def _build_ui(self):
         root = QVBoxLayout()
@@ -52,16 +81,16 @@ class DocumentOverviewWindow(QWidget):
         page_layout.setContentsMargins(80, 64, 80, 64)
         page_layout.setSpacing(16)
 
-        title = QLabel("Documentoverzicht en workflow selectie")
+        title = QLabel("Documenten (types controleren & selecteren)")
         title.setObjectName("title")
         title.setFont(QFont("Segoe UI", 30, QFont.Bold))
         title.setAlignment(Qt.AlignLeft)
         page_layout.addWidget(title)
 
-        subtitle = QLabel("Controleer document types en kies de juiste workflow per document.")
-        subtitle.setObjectName("fieldLabel")
-        subtitle.setFont(QFont("Segoe UI", 12))
-        page_layout.addWidget(subtitle)
+        self.subtitle = QLabel("")
+        self.subtitle.setObjectName("fieldLabel")
+        self.subtitle.setFont(QFont("Segoe UI", 12))
+        page_layout.addWidget(self.subtitle)
 
         # Scroll area for document cards
         self.scroll_area = QScrollArea()
@@ -83,18 +112,18 @@ class DocumentOverviewWindow(QWidget):
         button_row = QHBoxLayout()
         button_row.setSpacing(12)
 
-        self.create_btn = QPushButton("Dossier aanmaken")
+        self.create_btn = QPushButton("Archief (case) aanmaken")
         self.create_btn.setObjectName("primaryButton")
         self.create_btn.setCursor(Qt.PointingHandCursor)
-        self.create_btn.clicked.connect(self.go_next)
+        self.create_btn.clicked.connect(self.create_case_archive)
 
-        self.cancel_btn = QPushButton("Annuleren")
-        self.cancel_btn.setObjectName("secondaryButton")
-        self.cancel_btn.setCursor(Qt.PointingHandCursor)
-        self.cancel_btn.clicked.connect(self.close)
+        self.back_btn = QPushButton("Terug")
+        self.back_btn.setObjectName("secondaryButton")
+        self.back_btn.setCursor(Qt.PointingHandCursor)
+        self.back_btn.clicked.connect(self.go_back)
 
         button_row.addWidget(self.create_btn, alignment=Qt.AlignLeft)
-        button_row.addWidget(self.cancel_btn, alignment=Qt.AlignLeft)
+        button_row.addWidget(self.back_btn, alignment=Qt.AlignLeft)
         button_row.addStretch(1)
 
         page_layout.addLayout(button_row)
@@ -107,7 +136,7 @@ class DocumentOverviewWindow(QWidget):
         self.setLayout(root)
 
     def _combo_style(self) -> str:
-        # Matches the global palette (blue / light gray / gold / dark gray / white)
+        # QComboBox is not styled in global theme, so we style it locally.
         return """
             QComboBox {
                 background-color: rgb(255, 255, 255);
@@ -118,12 +147,12 @@ class DocumentOverviewWindow(QWidget):
                 font-size: 14px;
             }
             QComboBox:focus {
-                border: 2px solid #ffd700;
+                border: 2px solid #FFA500;
                 padding: 7px 9px;
             }
             QComboBox::drop-down {
                 border: none;
-                width: 30px;
+                width: 34px;
             }
         """
 
@@ -137,10 +166,9 @@ class DocumentOverviewWindow(QWidget):
 
         self.document_widgets = []
 
-        files = sorted(OUTPUT_DIR.glob("*_summary.txt"))
-
-        if not files:
-            empty = QLabel("Geen samenvattingen gevonden. Maak eerst een dossier aan via ZIP-upload.")
+        if self.state is None or not self.state.documents:
+            self.subtitle.setText("Geen documenten beschikbaar. Upload eerst een ZIP-bestand.")
+            empty = QLabel("Geen documenten gevonden.")
             empty.setObjectName("fieldLabel")
             empty.setFont(QFont("Segoe UI", 12))
             self.scroll_layout.addWidget(empty)
@@ -148,84 +176,137 @@ class DocumentOverviewWindow(QWidget):
             return
 
         self.create_btn.setEnabled(True)
+        self.subtitle.setText(f"Case: {self.state.case.case_id} • Documenten: {len(self.state.documents)}")
 
-        for file_path in files:
-            filename = file_path.name
-
-            card = QFrame()
-            card.setObjectName("card")
-
-            form = QFormLayout(card)
-            form.setContentsMargins(18, 16, 18, 16)
-            form.setHorizontalSpacing(18)
-            form.setVerticalSpacing(10)
-
-            name_field = QLineEdit(filename)
-            name_field.setObjectName("input")
-            name_field.setReadOnly(True)
-
-            type_box = QComboBox()
-            type_box.setStyleSheet(self._combo_style())
-            type_box.addItems([
-                "Oude PJ rapportage",
-                "Reclasseringsrapport",
-                "TLL rapport",
-                "Observatieverslag",
-                "Onbekend",
-            ])
-
-            workflow_box = QComboBox()
-            workflow_box.setStyleSheet(self._combo_style())
-            workflow_box.addItems([
-                "Oude Pro Justitia (Oude PJ) rapportage Samenvatter 1.0 - Maart 2024",
-                "Reclasseringsrapport Samenvatter 1.0 - Maart 2024",
-                "TLL Generator (obv vordering IBS)",
-                "Standaard Samenvatting",
-            ])
-
-            label_font = QFont("Segoe UI", 11)
-            label_font.setBold(True)
-
-            name_label = QLabel("Naam:")
-            name_label.setObjectName("fieldLabel")
-            name_label.setFont(label_font)
-
-            type_label = QLabel("Document Type:")
-            type_label.setObjectName("fieldLabel")
-            type_label.setFont(label_font)
-
-            workflow_label = QLabel("Workflow:")
-            workflow_label.setObjectName("fieldLabel")
-            workflow_label.setFont(label_font)
-
-            form.addRow(name_label, name_field)
-            form.addRow(type_label, type_box)
-            form.addRow(workflow_label, workflow_box)
-
-            self.scroll_layout.addWidget(card)
-
-            self.document_widgets.append({
-                "filename": filename,
-                "type_box": type_box,
-                "workflow_box": workflow_box,
-            })
+        for doc in self.state.documents:
+            self._add_document_card(doc)
 
         self.scroll_layout.addStretch(1)
 
-    def go_next(self):
-        from UI.dossier_start_window import DossierStartWindow
+    def _add_document_card(self, doc: DocumentState) -> None:
+        card = QFrame()
+        card.setObjectName("card")
 
-        selected_docs = []
-        for doc in self.document_widgets:
-            selected_docs.append({
-                "filename": doc["filename"],
-                "doc_type": doc["type_box"].currentText(),
-                "workflow": doc["workflow_box"].currentText(),
-            })
+        form = QFormLayout(card)
+        form.setContentsMargins(18, 16, 18, 16)
+        form.setHorizontalSpacing(18)
+        form.setVerticalSpacing(10)
 
-        self.next_window = DossierStartWindow(documents=selected_docs)
-        self.next_window.show()
+        label_font = QFont("Segoe UI", 11)
+        label_font.setBold(True)
+
+        name_label = QLabel("Naam:")
+        name_label.setObjectName("fieldLabel")
+        name_label.setFont(label_font)
+
+        type_label = QLabel("Document Type:")
+        type_label.setObjectName("fieldLabel")
+        type_label.setFont(label_font)
+
+        sel_label = QLabel("Selecteren:")
+        sel_label.setObjectName("fieldLabel")
+        sel_label.setFont(label_font)
+
+        name_field = QLineEdit(doc.original_name)
+        name_field.setObjectName("input")
+        name_field.setReadOnly(True)
+
+        # Dropdown for type (stores code in userData)
+        type_box = NoWheelComboBox()
+        type_box.setEditable(False)
+        type_box.setStyleSheet(self._combo_style())
+
+        detected_code = (doc.detected_type or "UNKNOWN").strip()
+        override_code = (doc.type_override or "").strip()
+        pre_code = override_code or detected_code
+
+        # Add standard options
+        for code, label in DOC_TYPE_OPTIONS:
+            type_box.addItem(f"{code} — {label}", userData=code)
+
+        # If detected code is not in standard list, add it on top
+        codes = [type_box.itemData(i) for i in range(type_box.count())]
+        if detected_code and detected_code not in codes:
+            type_box.insertItem(0, detected_code, userData=detected_code)
+
+        # Preselect
+        idx = -1
+        for i in range(type_box.count()):
+            if type_box.itemData(i) == pre_code:
+                idx = i
+                break
+        if idx >= 0:
+            type_box.setCurrentIndex(idx)
+
+        selected_cb = QCheckBox()
+        selected_cb.setChecked(bool(doc.selected))
+
+        form.addRow(sel_label, selected_cb)
+        form.addRow(name_label, name_field)
+        form.addRow(type_label, type_box)
+
+        self.scroll_layout.addWidget(card)
+
+        self.document_widgets.append({
+            "doc_id": doc.doc_id,
+            "selected_cb": selected_cb,
+            "type_box": type_box,
+        })
+
+    def create_case_archive(self):
+        if self.state is None:
+            QMessageBox.warning(self, "Fout", "Geen AppState gevonden.")
+            return
+
+        # Apply UI selections to state
+        id_to_doc = {d.doc_id: d for d in self.state.documents}
+
+        selected_count = 0
+        for w in self.document_widgets:
+            doc = id_to_doc.get(w["doc_id"])
+            if doc is None:
+                continue
+
+            is_selected = bool(w["selected_cb"].isChecked())
+            doc.selected = is_selected
+            if is_selected:
+                selected_count += 1
+
+            chosen_code = w["type_box"].currentData()
+            if chosen_code is None:
+                chosen_code = ""
+
+            chosen_code = str(chosen_code).strip()
+            detected_code = (doc.detected_type or "").strip()
+
+            # Store override only if different from detected
+            if chosen_code and chosen_code != detected_code:
+                doc.type_override = chosen_code
+            else:
+                doc.type_override = ""
+
+        if selected_count == 0:
+            QMessageBox.warning(self, "Geen selectie", "Selecteer minstens één document.")
+            return
+
+        # Queue selected docs and persist manifest
+        self.state.mark_archive_created_and_queue_selected()
+        self.state.save_manifest()
+
+        # Go to Summaries Table (auto-start summarization)
+        from UI.dossier_documents_window import DossierDocumentsWindow
+
         self.close()
+        self.next_window = DossierDocumentsWindow(state=self.state)
+        self.next_window.show()
+
+    def go_back(self):
+        # Back to ZIP upload screen
+        from UI.zip_upload_window import ZipUploadWindow
+
+        self.close()
+        self.prev = ZipUploadWindow(state=self.state)
+        self.prev.show()
 
     def _center_on_screen(self):
         screen = QApplication.primaryScreen()

@@ -15,7 +15,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont, QColor
 from PyQt5.QtCore import Qt
 
-from UI.zip_upload_window import ZipUploadWindow
+from backend.state import AppState
+from UI.upload_window import ModelCheckWindow
 
 
 class LoginWindow(QWidget):
@@ -335,11 +336,14 @@ class LoginWindow(QWidget):
             QMessageBox.warning(self, "Fout", "Voer zowel e-mailadres als wachtwoord in.")
             return
 
-        # TODO: Future update — validate credentials
+    # Create app state and store user context
+        state = AppState()
+        state.user.email = email
 
         self.close()
-        self.zip_window = ZipUploadWindow()
-        self.zip_window.show()
+        self.model_window = ModelCheckWindow(state=state)
+        self.model_window.show()
+
 
     def _center_on_screen(self):
         screen = QApplication.primaryScreen()

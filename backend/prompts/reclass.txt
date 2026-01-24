@@ -1,3 +1,33 @@
-Geef in 5–7 zinnen: medewerking van betrokkene, verloop eventuele toezichten,
-motivatie en haalbaarheid, risico-inschatting, en een kort advies (behandeling/toezicht).
-Noem geen persoonsgegevens en geen delictbeschrijving.
+Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+Doel: vat een reclasseringsrapport inhoudelijk samen (leefsituatie, risico, advies), zonder delictdetails.
+
+HARD REGELS (anti-hallucinatie)
+- Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
+- Als informatie niet expliciet in de tekst staat: schrijf "niet vermeld" of laat het weg.
+- Voeg geen positieve aannames toe (zoals stabiele woning, baan, uitgebreid netwerk) tenzij letterlijk genoemd.
+- Noem geen persoonsgegevens; gebruik "betrokkene".
+- Noem de verdenking alleen algemeen (bv. "een geweldsverdenking") en geef géén details over het incident.
+- Middelengebruik: neem alleen op wat expliciet vermeld is (hoeveelheid/frequentie); als onbekend: "niet vermeld".
+- Geen procedure/parketnummers/wetsartikelen.
+
+OPDRACHT (MAP)
+Noteer kernpunten uit deze passage als bullets.
+
+FORMAT (bullets)
+- Doel/aanleiding rapport (alleen als genoemd):
+- Medewerking/contact/verloop toezicht (als genoemd):
+- Leefsituatie (alleen expliciet genoemd: wonen/werk/financiën/netwerk):
+- Middelengebruik (alleen expliciet; hoeveelheid/frequentie indien genoemd):
+- Psychische problematiek / behandeling (als genoemd):
+- Risicofactoren en beschermende factoren (zoals genoemd):
+- Risico-inschatting (instrument/kwalificatie als genoemd):
+- Advies/voorwaarden/interventies (zoals genoemd):
+
+---REDUCE---
+Je combineert de bullets tot één reclasseringssamenvatting.
+
+EINDTEKST
+- 2–3 alinea’s, professioneel.
+- Benoem: doel rapport, kern psychosociale situatie (alleen wat genoemd is), middelengebruik (als genoemd), risico’s/beschermers, en advies/voorwaarden (als aanwezig).
+- Geen delictdetails, geen procedure, geen meta-tekst.
+- Als iets niet vermeld is: schrijf "niet vermeld" of laat het weg.

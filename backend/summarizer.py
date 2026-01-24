@@ -1,11 +1,13 @@
 # backend/summarizer.py
+# All comments are intentionally in English (project convention).
 
 from __future__ import annotations
 
+import os
 import re
 import threading
 from pathlib import Path
-from typing import List, Optional
+from typing import Callable, List, Optional, Tuple
 
 from backend.config import (
     PROMPT_FILES,
@@ -23,6 +25,24 @@ from backend.config import (
     LCPP_VERBOSE,
 )
 
+# -----------------------------------------------------------------------------
+# Runtime overrides (useful for prompt testing)
+# -----------------------------------------------------------------------------
+#   FS_FAST_MODE=1              -> summarize only first chunks (fast)
+#   FS_FAST_MAX_CHUNKS=1        -> number of chunks to process in fast mode
+#   FS_MAP_MAX_NEW=140          -> max tokens for MAP step
+#   FS_REDUCE_MAX_NEW=260       -> max tokens for REDUCE step
+#   FS_TEMPERATURE=0            -> deterministic output for A/B prompt tests
+#   FS_TOP_P=1
+#   FS_REPETITION_PENALTY=1.15
+FAST_MODE = os.getenv("FS_FAST_MODE", "0").strip() == "1"
+FAST_MAX_CHUNKS = int(os.getenv("FS_FAST_MAX_CHUNKS", "1"))
+MAP_MAX_NEW = int(os.getenv("FS_MAP_MAX_NEW", str(MAX_NEW_TOKENS)))
+REDUCE_MAX_NEW = int(os.getenv("FS_REDUCE_MAX_NEW", str(max(220, MAX_NEW_TOKENS))))
+TEMPERATURE = float(os.getenv("FS_TEMPERATURE", "0.2"))
+TOP_P = float(os.getenv("FS_TOP_P", "0.9"))
+REPETITION_PENALTY = float(os.getenv("FS_REPETITION_PENALTY", "1.15"))
+
 # Global singleton model instance (process-wide)
 _llm = None
 
@@ -35,7 +55,18 @@ STOP_WORDS = [
     "JOUW ANTWOORD:",
     "JOUW ANTWOORD",
     "[TEKST_OM_SAMEN_TE_VATTEN]",
+    "<|user|>",
+    "<|system|>",
+    "<|assistant|>",
 ]
+
+# -----------------------------------------------------------------------------
+# Helpers (text)
+# -----------------------------------------------------------------------------
+
+def _count_tokens_rough(s: str) -> int:
+    """Rough token estimator to avoid ctx overflow."""
+    return max(1, int(len(s) / 3.6))
 
 
 def _sanitize(s: str) -> str:
@@ -63,16 +94,46 @@ def _chunk(text: str, max_chars: int) -> List[str]:
     return out
 
 
-def _load_template(doc_type: str) -> str:
+def _load_templates(doc_type: str) -> Tuple[str, str]:
+    """Load MAP and REDUCE templates from a single prompt file."""
     path = PROMPT_FILES.get(doc_type.upper()) or PROMPT_FILES["UNKNOWN"]
-    return Path(path).read_text(encoding="utf-8")
+    txt = Path(path).read_text(encoding="utf-8")
 
+    sep = "\n---REDUCE---\n"
+    if sep in txt:
+        map_tpl, reduce_tpl = txt.split(sep, 1)
+        return map_tpl.strip(), reduce_tpl.strip()
+
+    return txt.strip(), ""
+
+
+def _wrap_user(template: str, body: str, extra: str = "") -> str:
+    """Wrap the source text with clear delimiters."""
+    msg = (
+        template.strip()
+        + "\n[TEKST]\n"
+        + (body or "").strip()
+        + "\n</TEKST>\n"
+    )
+    if extra:
+        msg += "\n" + extra.strip()
+    return msg
+
+
+def _clean_echo(txt: str) -> str:
+    """Remove common prompt-echo artifacts."""
+    t = (txt or "").strip()
+    t = re.sub(r"(?i)^\s*je bent.*?\n", "", t)
+    t = re.sub(r"(?i)(\bje bent\b[\s,;:.!?]*){2,}", "Je bent ", t)
+    return t.strip()
+
+
+# -----------------------------------------------------------------------------
+# Prompt format (Mistral Instruct)
+# -----------------------------------------------------------------------------
 
 def _mistral_instruct_prompt(system_msg: str, user_msg: str) -> str:
-    """
-    Mistral Instruct format.
-    Works well with Mistral Instruct GGUF.
-    """
+    """Mistral Instruct format (GGUF)."""
     system_msg = (system_msg or "").strip()
     user_msg = (user_msg or "").strip()
 
@@ -81,25 +142,33 @@ def _mistral_instruct_prompt(system_msg: str, user_msg: str) -> str:
     return f"<s>[INST] {user_msg} [/INST]"
 
 
-def _wrap_user(template: str, body: str, max_sents: int = 4) -> str:
-    return (
-        template.strip()
-        + "\n[TEKST]\n"
-        + (body or "").strip()
-        + "\n</TEKST>\n"
-        + f"Geef maximaal {max_sents} zinnen."
-    )
+def _fit_user_to_ctx(
+    system_msg: str,
+    template: str,
+    body: str,
+    target_ctx: int,
+    extra: str = "",
+) -> str:
+    """Shrink the body until the rough token estimate fits into the target context."""
+    ch = (body or "").strip()
+    limit = max(256, int(target_ctx * 0.90))
 
+    while True:
+        user_msg = _wrap_user(template, ch, extra=extra)
+        prompt = _mistral_instruct_prompt(system_msg, user_msg)
+
+        if _count_tokens_rough(prompt) <= limit or len(ch) < 200:
+            return prompt
+
+        ch = ch[: int(len(ch) * 0.85)]
+
+
+# -----------------------------------------------------------------------------
+# Model loader (llama-cpp-python)
+# -----------------------------------------------------------------------------
 
 def _get_llm():
-    """
-    Load GGUF model via llama-cpp-python.
-
-    Stability-first:
-    - serialize init + inference with _LLM_LOCK
-    - default threads=1 on macOS (config)
-    - default mmap disabled on macOS (config)
-    """
+    """Load GGUF model via llama-cpp-python."""
     global _llm
 
     with _LLM_LOCK:
@@ -109,15 +178,13 @@ def _get_llm():
         try:
             from llama_cpp import Llama  # type: ignore
         except Exception as e:
-            raise RuntimeError(
-                "llama-cpp-python is not installed. Add it to requirements and remove ctransformers."
-            ) from e
+            raise RuntimeError("llama-cpp-python is not installed.") from e
 
         mp = Path(str(MODEL_PATH))
         if not mp.exists():
             raise FileNotFoundError(f"LLM model not found: {mp}")
 
-        # Print llama.cpp build/system info (helps confirm Metal backend in logs)
+        # Optional: print llama.cpp build info for debugging (Metal, etc.)
         try:
             from llama_cpp import llama_print_system_info  # type: ignore
             if bool(LCPP_VERBOSE):
@@ -125,8 +192,6 @@ def _get_llm():
         except Exception:
             pass
 
-        # IMPORTANT:
-        # Keep n_gpu_layers=0 by default for packaged mac builds unless you tested Metal carefully.
         _llm = Llama(
             model_path=str(mp),
             n_ctx=int(N_CTX),
@@ -144,55 +209,84 @@ def _get_llm():
             f" batch={int(LCPP_BATCH)} gpu_layers={int(LCPP_GPU_LAYERS)}"
             f" mmap={'on' if LCPP_USE_MMAP else 'off'} mlock={'on' if LCPP_USE_MLOCK else 'off'}"
         )
+
         return _llm
 
 
 def _generate(prompt: str, *, max_new: Optional[int] = None) -> str:
-    """
-    Single entry point for inference. Must be locked to avoid concurrent ggml execution.
-    """
+    """Single entry point for inference."""
     llm = _get_llm()
     with _LLM_LOCK:
         res = llm(
             prompt,
             max_tokens=int(max_new or MAX_NEW_TOKENS),
-            temperature=0.2,
-            top_p=0.9,
-            repeat_penalty=1.15,
+            temperature=TEMPERATURE,
+            top_p=TOP_P,
+            repeat_penalty=REPETITION_PENALTY,
             stop=STOP_WORDS,
         )
     return (res["choices"][0]["text"] or "").strip()
 
 
-def _clean_echo(txt: str) -> str:
-    t = (txt or "").strip()
-    t = re.sub(r"(?i)^\s*je bent.*?\n", "", t)
-    t = re.sub(r"(?i)(\bje bent\b[\s,;:.!?]*){2,}", "Je bent ", t)
-    return t.strip()
-
-
-def _reduce_group(summaries: List[str], system_msg: str) -> str:
-    user = (
-        "Vat de volgende deelsamenvattingen samen tot één tekst van max. 4 zinnen.\n\n"
-        + "\n\n".join(f"— {i + 1}. {t}" for i, t in enumerate(summaries))
+def _reduce_group(
+    summaries: List[str],
+    system_msg: str,
+    target_ctx: int,
+    reduce_template: str,
+    extra: str = "",
+) -> str:
+    """Reduce a group of partial MAP outputs into a single text."""
+    header = reduce_template.strip() if reduce_template.strip() else (
+        "Combineer de onderstaande deelsamenvattingen tot één professionele tekst."
     )
-    prompt = _mistral_instruct_prompt(system_msg, user)
-    return _generate(prompt).strip()
 
+    def build_user(items: List[str]) -> str:
+        user_msg = (
+            header
+            + "\n\n[DEELSAMENVATTINGEN]\n"
+            + "\n\n".join(f"— {i + 1}. {t}" for i, t in enumerate(items))
+            + "\n</DEELSAMENVATTINGEN>\n"
+        )
+        if extra:
+            user_msg += "\n" + extra.strip()
+        return user_msg
+
+    items = list(summaries)
+    user = build_user(items)
+    prompt = _mistral_instruct_prompt(system_msg, user)
+
+    # If it does not fit ctx, reduce the group size.
+    while _count_tokens_rough(prompt) > int(target_ctx * 0.90) and len(items) > 1:
+        items = items[: max(1, len(items) // 2)]
+        user = build_user(items)
+        prompt = _mistral_instruct_prompt(system_msg, user)
+
+    return _clean_echo(_generate(prompt, max_new=REDUCE_MAX_NEW))
+
+
+# -----------------------------------------------------------------------------
+# Public API
+# -----------------------------------------------------------------------------
 
 def summarize_document(
     doc_type: str,
     doc_text: Optional[str] = None,
     **kwargs,
 ) -> str:
-    """
-    MAP: summarize chunks
-    REDUCE: hierarchical aggregation
-    """
+    """Summarize a document using MAP -> REDUCE (hierarchical aggregation)."""
     if doc_text is None:
         doc_text = kwargs.get("text") or kwargs.get("document_text") or ""
 
-    template = _load_template(doc_type)
+    progress_cb: Optional[Callable[[str], None]] = kwargs.get("progress_callback")
+
+    def emit(msg: str) -> None:
+        if callable(progress_cb):
+            try:
+                progress_cb(msg)
+            except Exception:
+                pass
+
+    map_template, reduce_template = _load_templates(doc_type)
     text = _sanitize(doc_text)
 
     # Special trimming for TLL: drop everything after "Overwegende"
@@ -205,23 +299,39 @@ def summarize_document(
     if not chunks:
         return "Geen tekst aangetroffen."
 
-    system_msg = "Schrijf een korte, professionele samenvatting in het Nederlands."
+    if FAST_MODE:
+        chunks = chunks[: max(1, FAST_MAX_CHUNKS)]
+
+    system_msg = (
+        "Je schrijft in het Nederlands. "
+        "Volg de instructies strikt, gebruik uitsluitend informatie uit de tekst, en verzin niets."
+    )
 
     partials: List[str] = []
-    for ch in chunks:
-        user_msg = _wrap_user(template, ch, max_sents=4)
-        prompt = _mistral_instruct_prompt(system_msg, user_msg)
+    total = len(chunks)
 
-        out = _generate(prompt)
+    # MAP step
+    for i, ch in enumerate(chunks, start=1):
+        emit(f"Summarizing chunk {i}/{total}...")
+        prompt = _fit_user_to_ctx(system_msg, map_template, ch, int(N_CTX))
+        out = _generate(prompt, max_new=MAP_MAX_NEW)
         partials.append(_clean_echo(out))
 
     if len(partials) > AGGREGATE_MAX_PARTIALS:
         partials = partials[:AGGREGATE_MAX_PARTIALS]
 
+    # REDUCE step (hierarchical)
+    round_idx = 0
     while len(partials) > 1:
+        round_idx += 1
+        emit(f"Combining partial summaries (round {round_idx})...")
+
         grouped: List[str] = []
         for i in range(0, len(partials), AGGREGATE_GROUP_SIZE):
-            grouped.append(_reduce_group(partials[i : i + AGGREGATE_GROUP_SIZE], system_msg))
+            group = partials[i : i + AGGREGATE_GROUP_SIZE]
+            grouped.append(_reduce_group(group, system_msg, int(N_CTX), reduce_template))
+
         partials = grouped
 
+    emit("Done.")
     return partials[0] if partials else ""

@@ -1,13 +1,43 @@
-Schrijf 5–7 zinnen met de volgende informatie (allemaal in het Nederlands):
+Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+Doel: vat een (eerder) Pro Justitia-rapport inhoudelijk samen.
 
-– Datum en rapporteur (als deze in de tekst genoemd worden).
-– Of betrokkene meewerkte aan het onderzoek en hoe het contact verliep.
-– Korte beschrijving van de verdenking in één zin, zonder juridische formuleringen.
-– De belangrijkste psychiatrische bevindingen: klachten, symptomen, voorgeschiedenis.
-– Hoe deze toestand mogelijk doorwerkte in het ten laste gelegde gedrag.
-– Het advies of de conclusie over behandeling of maatregelen, als dat in de tekst staat.
+HARD REGELS (anti-hallucinatie)
+- Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
+- Noem geen persoonsgegevens; gebruik "betrokkene".
+- Noem het delict/feit alleen als het letterlijk zo in de tekst staat (geen interpretaties).
+- Als iets niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
+- Geen procedure/parketnummers/wetsartikelen.
 
-Gebruik uitsluitend termen als “betrokkene”, “aangever” of “getuige”; noem geen namen.
-Noem nooit het woord “samenvatting” of “dit verslag” in je tekst.
-Noem geen wetsartikelen en beschrijf geen procedurele stappen.
-Schrijf direct over betrokkene en wat uit het rapport blijkt.
+EVIDENCE-REGEL (alleen voor MAP)
+- Elke belangrijke feitelijke bewering in MAP moet een korte onderbouwing hebben: (bewijs: "...").
+- Gebruik 3–12 woorden uit de bron; geen bewijs = niet opnemen.
+
+OPDRACHT (MAP)
+Maak bullets met alleen bewezen feiten uit deze passage.
+
+FORMAT (bullets)
+- Rapportgegevens (datum/auteur/bron; alleen als genoemd) (bewijs: "..."):
+- Onderzoek/medewerking en bronnen (bv. dossier, gesprekken, opvragen info) (bewijs: "..."):
+- Observaties/klachten/symptomen (bewijs: "..."):
+- Diagnostiek/diagnose/hypothesen (alleen als genoemd) (bewijs: "..."):
+- Beperkingen/tekort aan info (bv. weigering, ontbrekende gegevens) (bewijs: "..."):
+- Risico/recidive-inschatting (als genoemd) (bewijs: "..."):
+- Advies/maatregelen/behandeling (als genoemd) (bewijs: "..."):
+- Delict/incident (max 1 bullet, alleen letterlijk benoemd, geen details) (bewijs: "..."):
+
+---REDUCE---
+Schrijf een professionele PJ-samenvatting op basis van de bullets.
+
+BELANGRIJK VOOR REDUCE
+- Verwijder alle "(bewijs: ...)" uit de eindtekst.
+- Neem alleen informatie op die in de bullets staat.
+- Schrijf doorlopende tekst (geen bullets).
+
+EINDTEKST (structuur en lengte)
+- 4–6 korte alinea’s.
+1) Kader: soort rapport, rol deskundigen, context (alleen wat genoemd is).
+2) Onderzoek en medewerking: wat is gedaan en welke beperkingen waren er.
+3) Klinische bevindingen/observaties en eventuele voorgeschiedenis (als genoemd).
+4) Diagnostiek/diagnose/hypothesen (alleen als genoemd; anders: "niet vermeld").
+5) Risico/advies/aanbevelingen (als genoemd).
+- Delict/incident hooguit 1–2 zinnen en alleen letterlijk benoemd.
