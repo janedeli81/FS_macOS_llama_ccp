@@ -1,33 +1,37 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat een reclasseringsrapport inhoudelijk samen (leefsituatie, risico, advies), zonder delictdetails.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
-- Als informatie niet expliciet in de tekst staat: schrijf "niet vermeld" of laat het weg.
-- Voeg geen positieve aannames toe (zoals stabiele woning, baan, uitgebreid netwerk) tenzij letterlijk genoemd.
-- Noem geen persoonsgegevens; gebruik "betrokkene".
-- Noem de verdenking alleen algemeen (bv. "een geweldsverdenking") en geef géén details over het incident.
-- Middelengebruik: neem alleen op wat expliciet vermeld is (hoeveelheid/frequentie); als onbekend: "niet vermeld".
-- Geen procedure/parketnummers/wetsartikelen.
+TAK
+Vat een reclasseringsrapport samen: leefsituatie, toezichtgeschiedenis, risico’s/beschermers en advies. Geen feitelijke delictdetails.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem de onderzochte altijd “betrokkene”. Geen naam/leeftijd/geboortedatum/adres/nationaliteit/ID’s.
+- Geen wetsartikelen, parket-/zaaknummers, zitting/toetsing/rechter (procedureel).
+- Noem verdenking hoogstens algemeen en alleen als expliciet genoemd; geen incidentdetails.
+- Middelengebruik alleen als expliciet genoemd (met hoeveelheid/frequentie indien vermeld).
+- Geen markdown-kopjes/nummering; MAP=bullets, REDUCE=doorlopende tekst.
 
 OPDRACHT (MAP)
-Noteer kernpunten uit deze passage als bullets.
+Extraheer kernpunten uit deze passage als bullets. Laat rubrieken weg die niet voorkomen. Verzin geen details.
 
 FORMAT (bullets)
-- Doel/aanleiding rapport (alleen als genoemd):
-- Medewerking/contact/verloop toezicht (als genoemd):
-- Leefsituatie (alleen expliciet genoemd: wonen/werk/financiën/netwerk):
-- Middelengebruik (alleen expliciet; hoeveelheid/frequentie indien genoemd):
-- Psychische problematiek / behandeling (als genoemd):
-- Risicofactoren en beschermende factoren (zoals genoemd):
-- Risico-inschatting (instrument/kwalificatie als genoemd):
-- Advies/voorwaarden/interventies (zoals genoemd):
+- Rapportgegevens (datum, auteur/instantie; alleen als genoemd):
+- Aanleiding/doel rapport (alleen als genoemd):
+- Bronnen/ingewonnen informatie (alleen als genoemd):
+- Medewerking/contact met betrokkene (alleen als genoemd):
+- Toezichtgeschiedenis (alleen als genoemd):
+- Leefsituatie (wonen/werk/dagbesteding/financiën/netwerk; alleen expliciet genoemd):
+- Psychische problematiek en zorg (alleen als genoemd; diagnose alleen als letterlijk benoemd):
+- Middelengebruik (alleen expliciet; details indien genoemd):
+- Risicofactoren en beschermende factoren (zoals letterlijk genoemd):
+- Risico-inschatting (alleen als genoemd):
+- Haalbaarheid/motivatie (alleen als genoemd):
+- Advies/voorwaarden/interventies (alleen als genoemd):
 
 ---REDUCE---
-Je combineert de bullets tot één reclasseringssamenvatting.
+Combineer de onderstaande bullets tot één reclasseringssamenvatting.
 
 EINDTEKST
 - 2–3 alinea’s, professioneel.
-- Benoem: doel rapport, kern psychosociale situatie (alleen wat genoemd is), middelengebruik (als genoemd), risico’s/beschermers, en advies/voorwaarden (als aanwezig).
+- Benoem: psychosociale situatie (alleen wat genoemd is), middelengebruik, risico’s/beschermers en advies/voorwaarden.
 - Geen delictdetails, geen procedure, geen meta-tekst.
-- Als iets niet vermeld is: schrijf "niet vermeld" of laat het weg.

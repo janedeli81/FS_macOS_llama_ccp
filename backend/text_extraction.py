@@ -1,7 +1,9 @@
 # backend/text_extraction.py
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 import re
 
 import docx
@@ -32,12 +34,30 @@ def _extract_docx(path: Path) -> str:
 
 
 def _extract_pdf(path: Path) -> str:
-    text_parts = []
+    """
+    Extract text from PDF.
+
+    We add explicit page markers. This improves:
+    - chunk boundaries
+    - chronological ordering in PVs
+    - traceability when the user cross-checks the source
+
+    We also apply very light dehyphenation for common PDF line-wrap patterns.
+    """
+    text_parts: List[str] = []
+
     with pdfplumber.open(path) as pdf:
-        for page in pdf.pages:
-            page_text = page.extract_text()
-            if page_text:
-                text_parts.append(page_text)
+        for i, page in enumerate(pdf.pages, start=1):
+            page_text = page.extract_text() or ""
+            page_text = page_text.strip()
+            if not page_text:
+                continue
+
+            # Light dehyphenation: join words split as "wo-\nord".
+            page_text = re.sub(r"(?<=\w)-\n(?=\w)", "", page_text)
+
+            text_parts.append(f"\n\n=== PAGINA {i} ===\n{page_text}\n")
+
     return "\n".join(text_parts)
 
 

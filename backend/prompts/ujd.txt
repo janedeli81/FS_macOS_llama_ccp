@@ -1,26 +1,32 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat een uittreksel justitiële documentatie (UJD) gestructureerd samen.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
-- Als details ontbreken: laat ze weg (schrijf niet "onbekend" als het niet nodig is).
-- Noem geen persoonsgegevens; gebruik "betrokkene".
-- Geen procedurele tekst; focus alleen op vermeldingen (feiten/afdoeningen/maatregelen) zoals genoemd.
+TAK
+Vat een uittreksel justitiële documentatie (UJD) samen als feitelijk overzicht van vermeldingen: openstaande zaken en afgedane zaken met delictsoort en afdoening/maatregel.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem geen persoonsgegevens; gebruik “betrokkene”.
+- Neem GEEN “Vrijspraak”-regels op (laat deze weg).
+- Laat zaken die duidelijk als “huidige zaak / huidige verdenking” zijn aangeduid weg.
+- Schrijf delictsoort in gewone taal; laat wetsartikelen/‘art.’-verwijzingen weg.
+- Schrijf compact en feitelijk; geen interpretaties.
 
 OPDRACHT (MAP)
-Extraheer vermeldingen uit deze passage en noteer ze compact.
+Extraheer vermeldingen uit deze passage en noteer ze als items (merge-vriendelijk).
 
-FORMAT
+FORMAT (items)
 Openstaand (indien genoemd):
-- [jaar/periode] – [aard/soort] – [status/maatregel] (alleen wat letterlijk genoemd is)
+- [jaar/periode] – [delict/soort] – [status/maatregel] (alleen als genoemd)
 
 Afgedaan (indien genoemd):
-- [jaar/periode] – [aard/soort] – [afdoening/straf/maatregel] (alleen wat letterlijk genoemd is)
+- [jaar/periode] – [delict/soort] – [afdoening/straf/maatregel + bijzondere voorwaarden] (alleen als genoemd)
 
 ---REDUCE---
-Combineer alle items tot één overzicht.
+Combineer alle onderstaande items tot één overzicht.
 
 EINDTEKST
-- Kopjes: "Openstaande zaken" en "Afgedane zaken" (alleen als relevant).
+- Gebruik kopjes: “Openstaande zaken” en “Afgedane zaken” (alleen als er items zijn).
 - Groepeer per jaar/periode, consistent.
-- Compact en feitelijk; geen interpretaties, geen extra toelichting.
+- Geen vrijspraakregels.
+- Geen wetsartikelen.
+- Alleen feiten zoals genoemd; geen toelichting.

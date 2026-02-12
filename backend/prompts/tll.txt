@@ -1,32 +1,29 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: beschrijf de kern van de verdenking/tenlastelegging in gewone taal.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-BELANGRIJK
-- In documenten zoals "Vordering tot inbewaringstelling" staat de feitelijke verdenking vaak in het deel dat begint met:
-  "ervan verdacht wordt, dat ..."
-  Focus op dát gedeelte en negeer procedurele tekst.
+TAK
+Beschrijf de kern van de verdenking/tenlastelegging in gewone taal.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
-- Noem geen namen/initialen/adressen/ID-nummers. Gebruik "betrokkene".
-- Geen wetsartikelen/parketnummers/zaaknummers/procedure. Laat die weg.
-- Neem datum/plaats/slachtoffer alleen over als ze in de tekst staan.
-- Schrijf geen "onbekend" als de informatie in de tekst staat. Als iets ontbreekt: laat het weg.
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem geen namen/initialen/adressen/ID’s. Gebruik “betrokkene” en voor derden algemeen “slachtoffer” of “aangever”.
+- Geen wetsartikelen, parket-/zaaknummers of procedure.
+- Neem datum/periode/plaats/letsel alleen over als het letterlijk genoemd is.
+- Schrijf feitelijk, neutraal en in de verleden tijd.
 
 OPDRACHT (MAP)
-Extraheer de kern van de verdenking op basis van het gedeelte "ervan verdacht wordt, dat ...".
+Extraheer de kern van de verdenking als bullets.
 
-FORMAT (bullets)
+FORMAT (bullets; alleen invullen als genoemd)
 - Kernverdenking in gewone taal (1 zin):
-- Datum/periode en plaats (als genoemd):
-- Tegen wie (algemeen: slachtoffer/aangever) (als genoemd):
-- Handelingen/geweld/middelen (alleen als genoemd):
-- Gevolg/letsel/schade (alleen als genoemd):
+- Datum/periode en plaats:
+- Tegen wie (algemeen):
+- Handelingen / geweld / middelen:
+- Gevolg / letsel / schade:
 
 ---REDUCE---
-Schrijf een compacte samenvatting van de verdenking.
+Schrijf een compacte samenvatting van de verdenking op basis van de onderstaande bullets.
 
 EINDTEKST
-- 1–2 alinea’s.
-- Alleen inhoudelijke verdenking: wat, wanneer, waar, tegen wie (algemeen), hoe.
+- 1 alinea (max. 4–6 zinnen).
+- Alleen: wat, wanneer, waar, tegen wie (algemeen), hoe.
 - Geen procedure, geen artikelen, geen meta-tekst.

@@ -1,34 +1,47 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat een proces-verbaal inhoudelijk samen (feiten, context en verklaringen), zonder procedurele details.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets. Vul niets aan.
-- Als informatie niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
-- Schrijf geen aannames (bv. baan, stabiele woning, netwerk) tenzij letterlijk genoemd.
-- Noem geen persoonsgegevens (namen/initialen/adressen/telefoons/ID/BSN/kentekens). Gebruik consequent:
-  * "betrokkene" = verdachte/onderzochte
-  * "aangever"/"aangeefster" = melder
-  * "slachtoffer", "getuige", "verbalisant" waar passend
-- Neem geen parket-/zaaknummers, wetsartikelen, procedurestappen, formulieren of standaardkoppen op.
-- Beschrijf het incident kort (max. 2–4 zinnen totaal in het eindresultaat), focus verder op verklaringen en relevante context.
-- Noem het delict alleen zoals letterlijk in de tekst staat; geen interpretaties.
+TAK
+Maak een anonieme, feitelijke samenvatting van een proces-verbaal (PV), geschikt voor een juridisch verslag. Focus op: toedracht volgens bronnen, verklaringen, objectieve bevindingen, en (indien genoemd) psychische toestand/middelengebruik.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem nooit namen, initialen, geboortedata, leeftijden, adressen (straatniveau), nationaliteit, telefoonnummers, kentekens, BSN/ID’s. Gebruik:
+  - “betrokkene” = verdachte/onderzochte
+  - “aangever” (of “aangeefster” als dat expliciet blijkt) = degene die aangifte deed
+  - “getuige” = overige derden
+- Geen wetsartikelen, parket-/zaaknummers, procedurele stappen (aanhouding, handboeien, cautie, voorgeleiding, ondertekening, afsluitdatum dossier), tenzij er in zo’n passage een nieuwe inhoudelijke verklaring of relevante bevinding staat.
+- Vermijd het woord “bewijs”. Beschrijf concreet wat er werd gezien/verklaard/vastgesteld (alleen als het in de tekst staat).
+- Gebruik niet “toegeven” (gebruik “bekennen” of “zeggen”).
+- Schrijf neutraal, concreet en in de verleden tijd.
+- Letterlijke uitspraken van betrokkene die illustratief zijn: neem ze op tussen dubbele aanhalingstekens en cursief: *"..."*.
 
 OPDRACHT (MAP)
-Geef een passage-samenvatting als bullets. Neem alleen nieuwe, relevante feiten uit deze passage op.
+Extraheer uit deze passage alleen de feiten/verklaringen die later samen te voegen zijn. Houd strikt chronologie aan.
 
-FORMAT (bullets)
-- Aanleiding/context:
-- Chronologie (in volgorde; kort):
-- Verklaring aangever/aangeefster (inhoud; 0–2 korte citaten alleen als ze in de tekst staan):
-- Verklaring betrokkene (inhoud; 0–2 korte citaten alleen als ze in de tekst staan):
-- Waarnemingen/overig bewijs (getuigen/verbalisant/letsel/schade/voorwerpen; alleen als genoemd):
-- Middelengebruik (alleen als genoemd):
+OUTPUT (max. 12–16 bullets; alleen wat in deze passage staat)
+- Kenmerk PV (als letterlijk aanwezig; noteer als __PLxxxx-xxxxxxxxx__):
+- Verdenking/feit (in gewone taal, zonder wetsartikelen; alleen als genoemd):
+- Tijd/periode/plaats (alleen als genoemd):
+- Rolrelaties (alleen indien relevant en genoemd, bv. ex-partner/buur):
+- Aanleiding volgens aangever/aangeefster (chronologisch, concreet):
+- Verloop volgens aangever/aangeefster (chronologisch, concreet):
+- Verloop/verklaring volgens betrokkene (tegen wie gezegd; incl. *"..."*):
+- Reactie betrokkene op de beschuldiging (bekennen/ontkennen/zwijgrecht; alleen als genoemd):
+- Getuigen/derden (alleen nieuwe inhoudelijke details):
+- Objectieve bevindingen (bv. camerabeelden/letsel/forensische sporen; beschrijf wat er te zien/gevonden was):
+- Psychische toestand/verwardheid (alleen als genoemd; wie zei/constateerde dit):
+- Middelengebruik (soort/hoeveelheid/frequentie; evt. bloed/urine-onderzoek als genoemd):
 
 ---REDUCE---
-Je combineert bullets uit meerdere passages tot één doorlopende samenvatting.
+Je combineert de onderstaande deelsamenvattingen tot één anonieme PV-samenvatting.
 
-EINDTEKST
-- 2–4 alinea’s, professioneel en neutraal.
-- Focus op: aanleiding, kernverloop (kort), verklaringen, relevante context, letsel/schade, middelengebruik (als genoemd).
-- Geen procedure, geen wetsartikelen, geen meta-tekst.
-- Als iets onduidelijk of niet vermeld: benoem "niet vermeld" of laat het weg.
+EINDTEKST (doorlopende tekst, met alinea’s; geen bullets)
+1) Kenmerk (indien bekend) + korte omschrijving van de verdenking (zonder wetsartikelen).
+2) Aanleiding en verloop volgens aangever/aangeefster (chronologisch).
+3) Aanleiding en verloop volgens betrokkene (chronologisch; met *"..."* waar relevant).
+4) Getuigen/derden (alleen relevante aanvullingen).
+5) Objectieve bevindingen (concreet; geen “bewijs”).
+6) Psychische toestand / middelengebruik (alleen indien genoemd).
+7) Reactie betrokkene op de aangifte (incl. zwijgrecht indien genoemd).
+
+Schrijf neutraal, concreet, zonder herhaling, zonder procedurele formaliteiten.

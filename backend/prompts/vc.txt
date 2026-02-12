@@ -1,29 +1,38 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat de klinische inhoud van een consult/verslag samen.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
-- Als iets niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
-- Noem geen persoonsgegevens; gebruik "betrokkene".
-- Geef géén inhoudelijke delictbeschrijving. Als delictdetails voorkomen: noem dit algemeen ("het ten laste gelegde") en ga door met klinische inhoud.
-- Geen procedure/parketnummers/wetsartikelen.
+TAK
+Vat een (psychiatrisch/psychologisch) consultverslag (o.a. NIFP/voorgeleiding/spoedconsult) samen met focus op klinische inhoud: psychisch beeld, functioneren, veiligheid, middelen, behandeling en advies. Geen feitelijke delicttoedracht.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem betrokkene altijd “betrokkene”. Geen naam/leeftijd/geboortedatum/adres/nationaliteit/ID’s.
+- Geen wetsartikelen, parket-/zaaknummers, procedurele/administratieve tekst.
+- Delictdetails: alleen algemeen “het ten laste gelegde” en uitsluitend subjectieve beleving/verklaring van betrokkene (geen toedracht).
+- Schrijf in correct Nederlands en in de verleden tijd.
+- Geen markdown-kopjes/nummering; MAP=bullets, REDUCE=doorlopende tekst.
 
 OPDRACHT (MAP)
-Noteer kernpunten uit deze passage als bullets (kort, feitelijk).
+Noteer kernpunten uit deze passage als bullets. Laat rubrieken weg die niet voorkomen.
 
 FORMAT (bullets)
-- Contact/werkhouding:
-- Psychiatrische symptomen (stemming/angst/psychose/impulsiviteit etc.):
-- Cognitie/realiteitstoetsing/affect:
-- Middelengebruik (alleen als genoemd; hoeveelheid/frequentie indien vermeld):
-- Suïcidaliteit/agressie/veiligheid (alleen als genoemd):
-- Behandeling/medicatie/zorgcontact (alleen als genoemd):
-- Beoordeling/advies (alleen als genoemd):
+- Rapportgegevens (datum, auteur, discipline/rol; alleen als genoemd):
+- Setting / wijze van contact (alleen als genoemd):
+- Medewerking / contact / betrouwbaarheid (alleen als genoemd):
+- Verklaring betrokkene over het ten laste gelegde (subjectief; geen toedracht):
+- Psychiatrische/psychologische voorgeschiedenis en eerdere zorg (alleen als genoemd):
+- Psychische symptomen (alleen als genoemd):
+- Cognitie / oriëntatie / denken / realiteitstoetsing (alleen als genoemd):
+- Middelengebruik (alleen als genoemd):
+- Medicatie (alleen als genoemd):
+- Veiligheid (suïcidaliteit/zelfbeschadiging/agressie/risico; alleen als genoemd):
+- Klinische indruk / (mogelijke) diagnose(s) (alleen als expliciet genoemd):
+- Advies / plan (zorgbehoefte, vervolg, indicatie PJ; alleen als genoemd):
+- Justitiële antecedenten (alleen als genoemd; kort: jaar – delict/soort – afdoening/status):
 
 ---REDUCE---
-Je combineert de bullets tot één consultsamenvatting.
+Combineer de onderstaande bullets tot één consultsamenvatting.
 
 EINDTEKST
-- 1–2 alinea’s, professioneel en to-the-point.
-- Benoem: klinische indruk, middelengebruik (als genoemd), veiligheid/risico (als genoemd), en advies/plan (als aanwezig).
+- 1–2 korte alinea’s, professioneel.
+- Benoem: klinische indruk, middelengebruik (als genoemd), veiligheid/risico (als genoemd) en advies/plan (als genoemd).
 - Geen delictbeschrijving, geen procedure, geen meta-tekst.

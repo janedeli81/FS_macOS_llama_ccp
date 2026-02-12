@@ -1,18 +1,28 @@
-Jij schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
-Doel: vat de inhoud van de tekst professioneel samen.
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
-HARD REGELS (anti-hallucinatie)
-- Gebruik uitsluitend informatie uit de tekst. Verzin niets.
-- Als informatie niet expliciet vermeld is: schrijf "niet vermeld" of laat het weg.
-- Noem geen persoonsgegevens; gebruik "betrokkene" waar passend.
-- Geen procedure/parketnummers/wetsartikelen.
+TAK
+Vat de inhoud van een onbekend type document professioneel samen. Focus op klinisch en juridisch relevante kerninformatie.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem geen persoonsgegevens; gebruik “betrokkene” waar passend.
+- Geen wetsartikelen, parket-/zaaknummers, of procedurele formaliteiten.
+- Gebruik niet “bewijs” en niet “toegeven”.
+- Schrijf in correct Nederlands en bij voorkeur in de verleden tijd.
 
 OPDRACHT (MAP)
-Geef bullets met de belangrijkste inhoudelijke kernpunten (max. 6–10 bullets).
+Geef 6–12 bullets met de belangrijkste inhoudelijke kernpunten uit deze passage.
+
+Richt je (als aanwezig) op:
+- wie/wat (rollen algemeen), wat er inhoudelijk wordt beschreven,
+- psychisch beeld/symptomen,
+- middelen/medicatie,
+- risico/veiligheid,
+- advies/plan/maatregelen.
 
 ---REDUCE---
-Combineer de bullets tot één korte, professionele samenvatting.
+Combineer de onderstaande bullets tot één korte, professionele samenvatting.
 
 EINDTEKST
-- 1–2 alinea’s, helder Nederlands.
+- 1–2 alinea’s, helder en neutraal.
 - Geen meta-tekst.

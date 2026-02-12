@@ -1,6 +1,7 @@
 # UI/dossier_documents_window.py
 
 import sys
+import json
 import shutil
 from pathlib import Path
 from typing import Optional, Dict
@@ -40,35 +41,24 @@ from UI.final_report_window import FinalReportWindow
 
 
 class DossierDocumentsWindow(QWidget):
-    """
-    Summaries Table:
-    - shows documents for current case
-    - supports manual start/resume summarization
-    - protects against resume clicks during active summarization
-    """
-
     def __init__(self, state: Optional[AppState] = None):
         super().__init__()
         self.state = state
 
         self.setWindowTitle("Samenvattingen")
-        self.setMinimumSize(1100, 720)
+        self.setMinimumSize(1100, 780)
         self._center_on_screen()
 
         self.worker: Optional[SummarizationWorker] = None
         self.current_doc_id: Optional[str] = None
-
         self.row_by_doc_id: Dict[str, int] = {}
 
         self._build_ui()
         apply_window_theme(self)
 
-        # Normalize state on open (fix interrupted runs / old manifests)
         self._normalize_resume_state(reset_summarizing=True)
-
         self.load_table()
 
-        # Auto-start on open (safe), user can always resume manually if needed.
         QTimer.singleShot(250, self.start_auto_summarization)
 
     def _build_ui(self) -> None:
@@ -105,7 +95,13 @@ class DossierDocumentsWindow(QWidget):
         self.progress.setFixedHeight(26)
         page_layout.addWidget(self.progress)
 
-        # Control row (manual start/resume)
+        # NEW: visible log panel
+        self.log_box = QTextEdit()
+        self.log_box.setReadOnly(True)
+        self.log_box.setPlaceholderText("Log verschijnt hier tijdens samenvatten…")
+        self.log_box.setFixedHeight(140)
+        page_layout.addWidget(self.log_box)
+
         control_row = QHBoxLayout()
         control_row.setSpacing(12)
 
@@ -116,7 +112,6 @@ class DossierDocumentsWindow(QWidget):
 
         control_row.addWidget(self.resume_btn, alignment=Qt.AlignLeft)
         control_row.addStretch(1)
-
         page_layout.addLayout(control_row)
 
         self.table = QTableWidget()
@@ -149,16 +144,26 @@ class DossierDocumentsWindow(QWidget):
         btn_row.addWidget(self.back_btn, alignment=Qt.AlignLeft)
         btn_row.addStretch(1)
         btn_row.addWidget(self.report_btn, alignment=Qt.AlignRight)
-
         page_layout.addLayout(btn_row)
 
         wrapper.addWidget(self.page)
 
         container = QWidget()
         container.setLayout(wrapper)
-
         root.addWidget(container)
         self.setLayout(root)
+
+    def _append_log(self, msg: str) -> None:
+        if not msg:
+            return
+        # Keep log bounded
+        current = self.log_box.toPlainText()
+        lines = current.splitlines() if current else []
+        lines.append(msg)
+        if len(lines) > 600:
+            lines = lines[-600:]
+        self.log_box.setPlainText("\n".join(lines))
+        self.log_box.verticalScrollBar().setValue(self.log_box.verticalScrollBar().maximum())
 
     def _is_worker_running(self) -> bool:
         try:
@@ -166,43 +171,83 @@ class DossierDocumentsWindow(QWidget):
         except Exception:
             return False
 
-    # -------------------------
-    # Resume / normalize logic
-    # -------------------------
-    def _normalize_resume_state(self, reset_summarizing: bool = True) -> None:
-        """
-        Normalize case state.
+    def _read_summary_doc_type(self, doc) -> Optional[str]:
+        try:
+            paths = self._summary_paths_for_doc(doc)
+            json_path = paths.get("json")
+            if json_path is None or not json_path.exists():
+                return None
 
-        reset_summarizing=True  -> when opening a case: treat old 'summarizing' as interrupted -> requeue.
-        reset_summarizing=False -> when user clicks Resume during the same session: do NOT touch 'summarizing'.
-        """
+            data = json.loads(json_path.read_text(encoding="utf-8", errors="ignore"))
+            dt = data.get("doc_type")
+            if isinstance(dt, str) and dt.strip():
+                return dt.strip()
+        except Exception:
+            pass
+        return None
+
+    def _backup_and_remove_summary_files(self, doc) -> None:
+        try:
+            paths = self._summary_paths_for_doc(doc)
+        except Exception:
+            return
+
+        ts = QDateTime.currentDateTime().toString("yyyyMMdd_HHmmss")
+
+        for key in ("txt", "json"):
+            fp = paths.get(key)
+            if fp is None or not fp.exists():
+                continue
+
+            backup = fp.with_name(fp.name + f".bak_{ts}")
+            try:
+                fp.rename(backup)
+            except Exception:
+                try:
+                    shutil.copy2(fp, backup)
+                    fp.unlink()
+                except Exception:
+                    pass
+
+    def _normalize_resume_state(self, reset_summarizing: bool = True) -> None:
         if self.state is None:
             return
 
         changed = False
 
         for doc in self.state.documents:
-            # Ensure unselected documents stay skipped
             if not doc.selected and doc.status != DOC_STATUS_SKIPPED:
                 doc.status = DOC_STATUS_SKIPPED
                 doc.error_message = ""
                 changed = True
                 continue
 
-            # If summary files exist, mark summarized
+            desired_type = (doc.final_type() or "UNKNOWN").strip().upper()
+
             try:
                 paths = self._summary_paths_for_doc(doc)
-                has_any = paths["txt"].exists() or paths["json"].exists()
+                has_txt = paths["txt"].exists()
+                has_json = paths["json"].exists()
+                has_any = has_txt or has_json
             except Exception:
                 has_any = False
+                has_json = False
 
-            if doc.selected and has_any and doc.status != DOC_STATUS_SUMMARIZED:
-                doc.status = DOC_STATUS_SUMMARIZED
-                doc.error_message = ""
-                changed = True
+            if doc.selected and has_any:
+                used_type = self._read_summary_doc_type(doc) if has_json else None
+                if used_type and used_type.strip().upper() != desired_type:
+                    self._backup_and_remove_summary_files(doc)
+                    doc.status = DOC_STATUS_QUEUED
+                    doc.error_message = ""
+                    changed = True
+                    continue
+
+                if doc.status != DOC_STATUS_SUMMARIZED:
+                    doc.status = DOC_STATUS_SUMMARIZED
+                    doc.error_message = ""
+                    changed = True
                 continue
 
-            # If previous session was interrupted during summarizing -> back to queued
             if doc.selected and doc.status == DOC_STATUS_SUMMARIZING:
                 if reset_summarizing:
                     doc.status = DOC_STATUS_QUEUED
@@ -210,7 +255,6 @@ class DossierDocumentsWindow(QWidget):
                     changed = True
                 continue
 
-            # If selected doc is in an old/neutral state -> queue it
             if doc.selected and doc.status in (DOC_STATUS_DETECTED, DOC_STATUS_EXTRACTED):
                 doc.status = DOC_STATUS_QUEUED
                 changed = True
@@ -223,25 +267,14 @@ class DossierDocumentsWindow(QWidget):
         if self.state is None:
             return
 
-        # Prevent breaking the current summarization run
         if self._is_worker_running():
-            QMessageBox.information(
-                self,
-                "Info",
-                "Samenvattingen zijn al bezig. Wacht tot het huidige document klaar is."
-            )
+            QMessageBox.information(self, "Info", "Samenvattingen zijn al bezig.")
             return
 
-        # Normalize without touching 'summarizing' (safe) and reload UI
         self._normalize_resume_state(reset_summarizing=False)
         self.load_table()
-
-        # Start/resume summarization
         self.start_auto_summarization()
 
-    # -------------------------
-    # UI helpers
-    # -------------------------
     def _update_subtitle(self) -> None:
         if self.state is None:
             self.subtitle.setText("Geen case geladen.")
@@ -264,8 +297,8 @@ class DossierDocumentsWindow(QWidget):
             return
 
         self.row_by_doc_id = {}
-
         self.table.setRowCount(len(self.state.documents))
+
         for row, doc in enumerate(self.state.documents):
             self.row_by_doc_id[doc.doc_id] = row
 
@@ -287,7 +320,6 @@ class DossierDocumentsWindow(QWidget):
             self.table.setItem(row, 2, status_item)
             self.table.setItem(row, 3, date_item)
 
-            # Buttons
             view_btn = QPushButton("Bekijk")
             view_btn.setObjectName("secondaryButton")
             view_btn.clicked.connect(lambda _, did=doc.doc_id: self.view_summary(did))
@@ -335,11 +367,9 @@ class DossierDocumentsWindow(QWidget):
     def _refresh_row_buttons(self, doc_id: str) -> None:
         if self.state is None:
             return
-
         doc = next((d for d in self.state.documents if d.doc_id == doc_id), None)
         if doc is None:
             return
-
         row = self.row_by_doc_id.get(doc_id)
         if row is None:
             return
@@ -359,14 +389,10 @@ class DossierDocumentsWindow(QWidget):
         if export_json_btn:
             export_json_btn.setEnabled(has_json)
 
-    # -------------------------
-    # Summarization pipeline
-    # -------------------------
     def start_auto_summarization(self) -> None:
         if self.state is None:
             return
 
-        # If a worker is already running, do nothing.
         if self._is_worker_running():
             self.resume_btn.setEnabled(False)
             return
@@ -390,13 +416,16 @@ class DossierDocumentsWindow(QWidget):
             return
 
         self.resume_btn.setEnabled(False)
-
         self.current_doc_id = doc_id
+
         doc.status = DOC_STATUS_SUMMARIZING
         self.state.save_manifest()
 
         self._set_status_in_table(doc_id, DOC_STATUS_SUMMARIZING)
         self._update_subtitle()
+
+        self.log_box.clear()
+        self._append_log(f"=== Start: {doc.original_name} | Type={doc.final_type()} ===")
 
         doc_type_code = doc.final_type() or "UNKNOWN"
 
@@ -416,15 +445,20 @@ class DossierDocumentsWindow(QWidget):
         if not message:
             return
         msg = message.strip()
-        if len(msg) > 140:
-            msg = msg[:140] + "..."
-        # Keep first line (counters) + progress message
+
+        # Subtitle: keep short (1 line)
         first_line = self.subtitle.text().split("\n")[0]
-        self.subtitle.setText(first_line + "\n" + msg)
+        short = msg if len(msg) <= 160 else (msg[:160] + "…")
+        self.subtitle.setText(first_line + "\n" + short)
+
+        # Log: full message
+        self._append_log(msg)
 
     def _on_worker_error(self, message: str) -> None:
         if self.state is None or self.current_doc_id is None:
             return
+
+        self._append_log("ERROR: " + str(message))
 
         doc = next((d for d in self.state.documents if d.doc_id == self.current_doc_id), None)
         if doc is None:
@@ -438,8 +472,6 @@ class DossierDocumentsWindow(QWidget):
         self._update_subtitle()
 
         self.current_doc_id = None
-
-        # Continue with next queued doc
         QTimer.singleShot(150, self.start_auto_summarization)
 
     def _on_worker_finished(self, result: dict) -> None:
@@ -459,14 +491,14 @@ class DossierDocumentsWindow(QWidget):
         doc.error_message = ""
         self.state.save_manifest()
 
+        self._append_log("=== Done ===")
+
         self._set_status_in_table(doc.doc_id, DOC_STATUS_SUMMARIZED)
         self._refresh_row_buttons(doc.doc_id)
         self._update_subtitle()
         self._update_progress_bar()
 
         self.current_doc_id = None
-
-        # Continue with next queued doc
         QTimer.singleShot(150, self.start_auto_summarization)
 
     def _set_status_in_table(self, doc_id: str, status: str) -> None:
@@ -482,118 +514,66 @@ class DossierDocumentsWindow(QWidget):
     def view_summary(self, doc_id: str) -> None:
         if self.state is None:
             return
-
         doc = next((d for d in self.state.documents if d.doc_id == doc_id), None)
         if doc is None:
             return
 
         paths = self._summary_paths_for_doc(doc)
         txt_path = paths["txt"]
-
         if not txt_path.exists():
             QMessageBox.warning(self, "Niet gevonden", "Geen TXT-samenvatting gevonden.")
             return
 
-        try:
-            content = txt_path.read_text(encoding="utf-8", errors="ignore")
-        except Exception as e:
-            QMessageBox.critical(self, "Fout", f"Kan samenvatting niet lezen:\n{e}")
-            return
+        text = txt_path.read_text(encoding="utf-8", errors="ignore")
 
         dlg = QDialog(self)
         dlg.setWindowTitle(f"Samenvatting – {doc.original_name}")
-        dlg.resize(900, 700)
+        dlg.setMinimumSize(900, 650)
 
         layout = QVBoxLayout(dlg)
+        box = QTextEdit()
+        box.setReadOnly(True)
+        box.setPlainText(text)
+        layout.addWidget(box)
 
-        editor = QTextEdit()
-        editor.setObjectName("input")
-        editor.setReadOnly(True)
-        editor.setPlainText(content)
-        layout.addWidget(editor)
-
-        close_btn = QPushButton("Sluiten")
-        close_btn.setObjectName("secondaryButton")
-        close_btn.clicked.connect(dlg.close)
-        layout.addWidget(close_btn)
-
-        dlg.setLayout(layout)
         dlg.exec_()
 
-    def export_summary(self, doc_id: str, fmt: str) -> None:
+    def export_summary(self, doc_id: str, kind: str) -> None:
         if self.state is None:
             return
-
         doc = next((d for d in self.state.documents if d.doc_id == doc_id), None)
         if doc is None:
             return
 
         paths = self._summary_paths_for_doc(doc)
-        src = paths.get(fmt)
+        src = paths.get(kind)
         if src is None or not src.exists():
-            QMessageBox.warning(self, "Niet gevonden", f"Geen {fmt.upper()}-bestand gevonden.")
+            QMessageBox.warning(self, "Niet gevonden", f"Geen {kind.upper()} gevonden.")
             return
 
-        default_name = src.name
-        filter_str = "Text (*.txt)" if fmt == "txt" else "JSON (*.json)"
-
-        dst, _ = QFileDialog.getSaveFileName(self, "Opslaan", default_name, filter_str)
-        if not dst:
+        dest, _ = QFileDialog.getSaveFileName(self, "Opslaan als", src.name)
+        if not dest:
             return
-
         try:
-            shutil.copyfile(src, Path(dst))
-            QMessageBox.information(self, "Opgeslagen", f"Bestand opgeslagen:\n{dst}")
+            shutil.copy2(src, dest)
         except Exception as e:
-            QMessageBox.critical(self, "Fout", f"Kan bestand niet opslaan:\n{e}")
+            QMessageBox.critical(self, "Fout", str(e))
 
     def open_final_report(self) -> None:
         if self.state is None:
-            QMessageBox.warning(self, "Fout", "Geen AppState gevonden.")
             return
-
-        self.close()
-        self.report_window = FinalReportWindow(state=self.state)
-        self.report_window.show()
+        w = FinalReportWindow(self.state)
+        w.show()
 
     def go_back(self) -> None:
-        from UI.document_overview_window import DocumentOverviewWindow
-
         self.close()
-        self.prev = DocumentOverviewWindow(state=self.state)
-        self.prev.show()
 
-    def closeEvent(self, event):
-        self._stop_worker()
-        event.accept()
-
-    def _stop_worker(self) -> None:
-        t = self.worker
-        if t is None:
-            return
+    def _center_on_screen(self) -> None:
         try:
-            if hasattr(t, "isRunning") and t.isRunning():
-                if hasattr(t, "requestInterruption"):
-                    t.requestInterruption()
-                if hasattr(t, "quit"):
-                    t.quit()
-                if hasattr(t, "wait"):
-                    t.wait(3000)
+            screen = QApplication.primaryScreen().availableGeometry()
+            self.move(
+                screen.center().x() - self.width() // 2,
+                screen.center().y() - self.height() // 2,
+            )
         except Exception:
             pass
-
-    def _center_on_screen(self):
-        screen = QApplication.primaryScreen()
-        if not screen:
-            return
-        rect = screen.availableGeometry()
-        x = rect.x() + (rect.width() - self.width()) // 2
-        y = rect.y() + (rect.height() - self.height()) // 2
-        self.move(x, y)
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = DossierDocumentsWindow()
-    window.show()
-    sys.exit(app.exec_())

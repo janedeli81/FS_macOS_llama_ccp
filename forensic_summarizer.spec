@@ -19,7 +19,7 @@ prompts_dir = backend_dir / "prompts"
 # Explicitly add each prompt file so they are definitely bundled
 # They will end up inside the bundle under backend/prompts/
 datas = [
-    (str(prompts_dir / "pj_old.txt"), "backend/prompts"),
+    (str(prompts_dir / "pj.txt"), "backend/prompts"),
     (str(prompts_dir / "vc.txt"), "backend/prompts"),
     (str(prompts_dir / "pv.txt"), "backend/prompts"),
     (str(prompts_dir / "reclass.txt"), "backend/prompts"),

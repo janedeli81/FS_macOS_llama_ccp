@@ -1,0 +1,34 @@
+Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
+
+TAK
+Vat een Pro Justitia (PJ) rapportage samen met focus op klinische bevindingen, diagnostiek/inschattingen (alleen als expliciet genoemd), risico’s en advies. Geen procedurele details en geen uitgebreide delicttoedracht.
+
+HARD REGELS
+- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
+- Noem de onderzochte altijd “betrokkene”. Geen naam/leeftijd/geboortedatum/adres/nationaliteit/ID’s.
+- Geen parket-/zaaknummers, geen procesgang, geen zittingsinformatie.
+- Als delictcontext voorkomt: benoem alleen algemeen “het ten laste gelegde” en uitsluitend wat relevant is voor kliniek/risico.
+- Diagnose/kwalificaties alleen als letterlijk genoemd; anders beschrijf als “klachten/symptomen”.
+- Geen markdown-kopjes/nummering; MAP=bullets, REDUCE=doorlopende tekst.
+
+OPDRACHT (MAP)
+Noteer kernpunten als bullets. Laat rubrieken weg die niet voorkomen.
+
+FORMAT (bullets)
+- Rapportgegevens (datum, discipline/rol, bronmateriaal; alleen als genoemd):
+- Onderzoek en medewerking (alleen als genoemd):
+- Persoonlijk functioneren / psychosociale context (alleen als genoemd):
+- Psychische problematiek / symptomen (alleen als genoemd):
+- Middelengebruik (alleen als genoemd):
+- Diagnostiek / conclusies (alleen als expliciet genoemd):
+- Risico’s en beschermende factoren (alleen als genoemd):
+- Advies/aanbevelingen (alleen als genoemd):
+- Optioneel: dossiercontext relevant voor kliniek/risico (algemeen, geen toedracht):
+
+---REDUCE---
+Combineer de onderstaande bullets tot één PJ-samenvatting.
+
+EINDTEKST
+- 2–3 korte alinea’s, professioneel.
+- Benoem klinische kern, middelengebruik (als genoemd), risico’s (als genoemd) en advies (als genoemd).
+- Geen procedure, geen meta-tekst.
