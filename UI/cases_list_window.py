@@ -33,9 +33,10 @@ class CasesListWindow(QWidget):
     - deletes a case folder
     """
 
-    def __init__(self, state: Optional[AppState] = None):
+    def __init__(self, state: Optional[AppState] = None, api_client=None):
         super().__init__()
         self.state = state or AppState()
+        self.api_client = api_client  # Store API client
 
         self.setWindowTitle("Mijn dossiers")
         self.setMinimumSize(1100, 720)
@@ -225,7 +226,7 @@ class CasesListWindow(QWidget):
         from UI.zip_upload_window import ZipUploadWindow
 
         self.close()
-        self.zip_window = ZipUploadWindow(state=self.state)
+        self.zip_window = ZipUploadWindow(state=self.state, api_client=self.api_client)
         self.zip_window.show()
 
     def _center_on_screen(self) -> None:

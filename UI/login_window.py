@@ -13,10 +13,26 @@ from PyQt5.QtWidgets import (
     QSizePolicy,
 )
 from PyQt5.QtGui import QFont, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 
 from backend.state import AppState
+from backend_api.api_client import APIClient
 from UI.upload_window import ModelCheckWindow
+
+
+class LoginThread(QThread):
+    """Background thread for API login to avoid UI freezing"""
+    finished = pyqtSignal(dict)
+
+    def __init__(self, api_client, email, password):
+        super().__init__()
+        self.api_client = api_client
+        self.email = email
+        self.password = password
+
+    def run(self):
+        result = self.api_client.login(self.email, self.password)
+        self.finished.emit(result)
 
 
 class LoginWindow(QWidget):
@@ -27,9 +43,26 @@ class LoginWindow(QWidget):
         self.setMinimumSize(1100, 720)
         self._center_on_screen()
 
+        # Initialize API client
+        self.api_client = APIClient()
+        self.login_thread = None
+
         self._build_ui()
         self._apply_styles()
         self._wire_events()
+        self._check_backend_availability()
+
+    def _check_backend_availability(self):
+        """Check if backend is running"""
+        if not self.api_client.health_check():
+            QMessageBox.warning(
+                self,
+                "Backend niet beschikbaar",
+                "Kan geen verbinding maken met de backend server.\n\n"
+                "Zorg ervoor dat de server draait:\n"
+                "cd backend_api\n"
+                "python -m uvicorn main:app --reload"
+            )
 
     def _build_ui(self):
         root = QVBoxLayout()
@@ -130,7 +163,7 @@ class LoginWindow(QWidget):
 
         form_layout.addSpacing(14)
 
-        # Links (no functionality yet)
+        # Links
         self.signup_link = QLabel(
             'Nog geen account? <a href="create_account">Klik hier</a> om een account aan te maken'
         )
@@ -173,17 +206,10 @@ class LoginWindow(QWidget):
         btn.setCursor(Qt.PointingHandCursor)
         btn.setAutoRaise(True)
         btn.setObjectName("navButtonSelected" if selected else "navButton")
-        btn.clicked.connect(self._on_nav_clicked)  # no functionality yet
+        btn.clicked.connect(self._on_nav_clicked)
         return btn
 
     def _apply_styles(self):
-        # Palette from user:
-        # Primary blue: rgb(0, 51, 102)
-        # Neutral background: rgb(240, 240, 240)
-        # Accent gold: #ffd700
-        # Text: rgb(50, 50, 50)
-        # White: rgb(255, 255, 255)
-
         self.setStyleSheet("""
             QWidget {
                 background-color: rgb(240, 240, 240);
@@ -266,7 +292,7 @@ class LoginWindow(QWidget):
 
             QLineEdit#input:focus {
                 border: 2px solid #ffd700;
-                padding: 11px 11px; /* keep size stable with thicker border */
+                padding: 11px 11px;
             }
 
             QLabel#linkLabel {
@@ -301,18 +327,17 @@ class LoginWindow(QWidget):
             QPushButton#loginButton:pressed {
                 background-color: #e6c200;
             }
+
+            QPushButton#loginButton:disabled {
+                background-color: #cccccc;
+                color: #666666;
+            }
         """)
 
     def _wire_events(self):
-        # Enter on email moves focus to password
         self.email_input.returnPressed.connect(self._focus_password)
-
-        # Enter on password triggers login (convenient, not required but useful)
         self.password_input.returnPressed.connect(self.login_button.click)
-
         self.login_button.clicked.connect(self.handle_login)
-
-        # Links: no functionality yet
         self.signup_link.linkActivated.connect(self._on_link_activated)
         self.reset_link.linkActivated.connect(self._on_link_activated)
 
@@ -320,30 +345,145 @@ class LoginWindow(QWidget):
         self.password_input.setFocus()
         self.password_input.selectAll()
 
-    def _on_link_activated(self, _href: str):
-        # No functionality yet
-        return
+    def _on_link_activated(self, href: str):
+        """Handle registration and password reset links"""
+        if href == "create_account":
+            # Auto-register with current email/password
+            self._try_register()
+        elif href == "reset_password":
+            QMessageBox.information(
+                self,
+                "Binnenkort beschikbaar",
+                "Wachtwoord reset functie wordt binnenkort toegevoegd."
+        )
 
     def _on_nav_clicked(self):
-        # No functionality yet
+        # Navigation functionality not implemented yet
         return
 
     def handle_login(self):
+        """Handle login with backend authentication"""
         email = self.email_input.text().strip()
         password = self.password_input.text()
 
+        # Validation
         if not email or not password:
             QMessageBox.warning(self, "Fout", "Voer zowel e-mailadres als wachtwoord in.")
             return
 
-    # Create app state and store user context
-        state = AppState()
-        state.user.email = email
+        if len(password) < 8:
+            QMessageBox.warning(self, "Fout", "Wachtwoord moet minimaal 8 tekens bevatten.")
+            return
 
-        self.close()
-        self.model_window = ModelCheckWindow(state=state)
-        self.model_window.show()
+        # Disable button during login
+        self.login_button.setEnabled(False)
+        self.login_button.setText("Inloggen...")
 
+        # Start login in background thread
+        self.login_thread = LoginThread(self.api_client, email, password)
+        self.login_thread.finished.connect(self._on_login_complete)
+        self.login_thread.start()
+
+    def _on_login_complete(self, result: dict):
+        """Handle login result"""
+        self.login_button.setEnabled(True)
+        self.login_button.setText("Login")
+
+        if result["success"]:
+            # Login successful - get user info
+            user_info = self.api_client.get_user_info()
+
+            if user_info:
+                # Create app state with user data
+                state = AppState()
+                state.user.email = user_info["email"]
+
+                # Show success message with trial info
+                user_status = self.api_client.get_user_status()
+                if user_status and user_status["is_trial"]:
+                    QMessageBox.information(
+                        self,
+                        "Welkom!",
+                        f"Welkom, {user_info['email']}!\n\n"
+                        f"Je hebt een gratis proefperiode van 7 dagen.\n"
+                        f"Trial verloopt op: {user_status['trial_ends_at'][:10]}"
+                    )
+                else:
+                    QMessageBox.information(
+                        self,
+                        "Welkom!",
+                        f"Welkom terug, {user_info['email']}!\n\n"
+                        f"Documenten beschikbaar: {user_status.get('documents_remaining', 0) if user_status else 0}"
+                    )
+
+                # Open next window
+                self.close()
+                self.model_window = ModelCheckWindow(state=state, api_client=self.api_client)
+                self.model_window.show()
+            else:
+                QMessageBox.critical(
+                    self,
+                    "Fout",
+                    "Kon gebruikersgegevens niet ophalen."
+                )
+        else:
+            # Login failed
+            error_message = result["error"]
+            if "Incorrect email or password" in error_message:
+                QMessageBox.warning(
+                    self,
+                    "Inloggen mislukt",
+                    "Onjuist e-mailadres of wachtwoord.\n\n"
+                    "Probeer het opnieuw of maak een nieuw account aan."
+                )
+            elif "not found" in error_message.lower():
+                # User not found - offer to register
+                reply = QMessageBox.question(
+                    self,
+                    "Account niet gevonden",
+                    f"Geen account gevonden voor {self.email_input.text()}.\n\n"
+                    "Wilt u een nieuw account aanmaken?",
+                    QMessageBox.Yes | QMessageBox.No
+                )
+                if reply == QMessageBox.Yes:
+                    self._try_register()
+            else:
+                QMessageBox.critical(
+                    self,
+                    "Verbindingsfout",
+                    f"Kan geen verbinding maken met de server.\n\n"
+                    f"Fout: {error_message}"
+                )
+
+    def _try_register(self):
+        """Try to register user with current credentials"""
+        email = self.email_input.text().strip()
+        password = self.password_input.text()
+
+        self.login_button.setEnabled(False)
+        self.login_button.setText("Registreren...")
+
+        result = self.api_client.register(email, password)
+
+        self.login_button.setEnabled(True)
+        self.login_button.setText("Login")
+
+        if result["success"]:
+            QMessageBox.information(
+                self,
+                "Account aangemaakt!",
+                f"Account succesvol aangemaakt voor {email}!\n\n"
+                "Je krijgt 7 dagen gratis proefperiode.\n\n"
+                "Je wordt nu automatisch ingelogd..."
+            )
+            # Auto-login after registration
+            self._on_login_complete(result)
+        else:
+            QMessageBox.critical(
+                self,
+                "Registratie mislukt",
+                f"Kon account niet aanmaken.\n\n{result['error']}"
+            )
 
     def _center_on_screen(self):
         screen = QApplication.primaryScreen()

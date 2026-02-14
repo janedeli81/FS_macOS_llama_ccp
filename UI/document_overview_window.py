@@ -51,10 +51,11 @@ class DocumentOverviewWindow(QWidget):
     - button "Archief (case) aanmaken" queues selected docs and navigates to summaries table
     """
 
-    def __init__(self, state: Optional[AppState] = None):
+    def __init__(self, state: Optional[AppState] = None, api_client=None):
         super().__init__()
 
         self.state = state
+        self.api_client = api_client  # Store API client
         self.setWindowTitle("Documenten beheren")
         self.setMinimumSize(1100, 720)
         self._center_on_screen()
@@ -297,7 +298,7 @@ class DocumentOverviewWindow(QWidget):
         from UI.dossier_documents_window import DossierDocumentsWindow
 
         self.close()
-        self.next_window = DossierDocumentsWindow(state=self.state)
+        self.next_window = DossierDocumentsWindow(state=self.state, api_client=self.api_client)
         self.next_window.show()
 
     def go_back(self):

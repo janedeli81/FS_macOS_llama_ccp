@@ -184,9 +184,10 @@ class ModelDownloadWorker(QThread):
 
 
 class ModelCheckWindow(QWidget):
-    def __init__(self, state: AppState):
+    def __init__(self, state: AppState = None, api_client=None):
         super().__init__()
-        self.state = state
+        self.state = state or AppState()
+        self.api_client = api_client  # Store API client
 
         self.setWindowTitle("Modelcontrole")
         self.setMinimumSize(1100, 720)
@@ -389,7 +390,7 @@ class ModelCheckWindow(QWidget):
         from UI.cases_list_window import CasesListWindow
 
         self.close()
-        self.cases_window = CasesListWindow(state=self.state)
+        self.cases_window = CasesListWindow(state=self.state, api_client=self.api_client)
         self.cases_window.show()
 
     def _go_back_to_login(self) -> None:
