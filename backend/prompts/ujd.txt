@@ -1,32 +1,38 @@
 Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
 TAK
-Vat een uittreksel justitiële documentatie (UJD) samen als feitelijk overzicht van vermeldingen: openstaande zaken en afgedane zaken met delictsoort en afdoening/maatregel.
+Vat een uittreksel justitiële documentatie (UJD) samen als feitelijk overzicht van vermeldingen.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem geen persoonsgegevens; gebruik “betrokkene”.
-- Neem GEEN “Vrijspraak”-regels op (laat deze weg).
-- Laat zaken die duidelijk als “huidige zaak / huidige verdenking” zijn aangeduid weg.
-- Schrijf delictsoort in gewone taal; laat wetsartikelen/‘art.’-verwijzingen weg.
-- Schrijf compact en feitelijk; geen interpretaties.
+PRIORITEIT 1 — ANONIMITEIT
+- Noem geen persoonsgegevens. Gebruik "betrokkene".
+- Als de tekst placeholders bevat — laat ze exact staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Neem GEEN "Vrijspraak"-regels op.
+- Laat zaken weg die als "huidige zaak/huidige verdenking" zijn aangeduid.
+- Schrijf delictsoort in gewone taal; geen wetsartikelen.
+- Schrijf geen “niet/geen” tenzij letterlijk aanwezig.
+- Compact en feitelijk; geen interpretaties.
 
 OPDRACHT (MAP)
-Extraheer vermeldingen uit deze passage en noteer ze als items (merge-vriendelijk).
+Extraheer vermeldingen als items. Geen kopjes in MAP-uitvoer.
 
-FORMAT (items)
-Openstaand (indien genoemd):
-- [jaar/periode] – [delict/soort] – [status/maatregel] (alleen als genoemd)
-
-Afgedaan (indien genoemd):
-- [jaar/periode] – [delict/soort] – [afdoening/straf/maatregel + bijzondere voorwaarden] (alleen als genoemd)
+FORMAT (items; alleen als genoemd)
+- OPEN: [jaar/periode] – [delict in gewone taal] – [status/maatregel]
+- AFGEDAAN: [jaar/periode] – [delict in gewone taal] – [afdoening/straf/maatregel]
 
 ---REDUCE---
-Combineer alle onderstaande items tot één overzicht.
+Combineer alle items tot één overzicht.
+
+HARD REGELS
+- Voeg GEEN nieuwe vermeldingen toe.
+- Geen namen/initialen/adres/BSN.
+- Geen wetsartikelen. Geen zaaknummers.
 
 EINDTEKST
-- Gebruik kopjes: “Openstaande zaken” en “Afgedane zaken” (alleen als er items zijn).
-- Groepeer per jaar/periode, consistent.
-- Geen vrijspraakregels.
-- Geen wetsartikelen.
-- Alleen feiten zoals genoemd; geen toelichting.
+- Gebruik alleen de kopjes (alleen als er items zijn):
+  "Openstaande zaken"
+  "Afgedane zaken"
+- Groepeer per jaar/periode.
+- Per item: 1 regel, zo compact mogelijk.
+- Geen meta-tekst. Geen herhaling.

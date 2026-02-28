@@ -38,11 +38,11 @@ EXTRACTED_DIR.mkdir(parents=True, exist_ok=True)
 FINAL_REPORT_PATH = OUTPUT_DIR / "final_report.txt"
 FINAL_REPORT_PDF_PATH = OUTPUT_DIR / "final_report.pdf"
 
-MAX_CHARS_PER_CHUNK = 9000
-N_CTX = 8192
-MAX_NEW_TOKENS = 512
+MAX_CHARS_PER_CHUNK = 15000
+N_CTX = 32768
+MAX_NEW_TOKENS = 1024
 
-AGGREGATE_GROUP_SIZE = 4
+AGGREGATE_GROUP_SIZE = 6
 AGGREGATE_MAX_PARTIALS = 0
 
 PROMPT_FILES = {
@@ -56,14 +56,18 @@ PROMPT_FILES = {
     "UNKNOWN": PROMPTS_DIR / "unknown.txt",
 }
 
-# Model configuration
-# The actual model path is managed by model_manager.py via ensure_model_ready()
-# This constant is only used for the encrypted filename pattern
-MODEL_FILENAME = "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"
+MODEL_FILENAME = "Mistral-Small-Instruct-2409-Q4_K_M.gguf"
 
-# DEPRECATED: These functions search for UNENCRYPTED models and are kept
-# only for backward compatibility. The primary method is model_manager.ensure_model_ready()
-# which handles encrypted (.enc) models.
+# Hugging Face direct download URL.
+# You can override it via FS_MODEL_DOWNLOAD_URL environment variable if needed.
+MODEL_URL = (
+    "https://huggingface.co/bartowski/Mistral-Small-Instruct-2409-GGUF/resolve/main/"
+    "Mistral-Small-Instruct-2409-Q4_K_M.gguf?download=true"
+)
+
+# Optional integrity check.
+# Leave empty to skip checksum verification, or set the expected sha256.
+MODEL_SHA256 = ""
 
 
 def get_bundled_model_path() -> Path:
@@ -99,3 +103,49 @@ def get_model_path() -> Path:
 
 
 MODEL_PATH = get_model_path()
+
+# ---------------------------------------------------------------------------
+# Default runtime tuning (Apple Silicon / Metal friendly)
+# Applied only if the user did NOT set FS_* vars externally.
+# ---------------------------------------------------------------------------
+
+def apply_runtime_env_defaults() -> None:
+    """
+    Apply default environment variables for runtime tuning.
+
+    These values are used only if the user did not already set them externally
+    (Terminal, system env, etc.). This keeps the app self-contained while still
+    allowing overrides.
+    """
+    cpu_cnt = os.cpu_count() or 8
+
+    defaults = {
+        # Context window
+        "FS_CTX": str(N_CTX),
+
+        # llama.cpp runtime
+        "FS_BATCH_SIZE": "128",
+        # Reasonable default: use up to 8 threads, but not more than CPU count
+        "FS_THREADS": str(min(8, cpu_cnt)),
+
+        # Generation limits (faster defaults)
+        "FS_REDUCE_MAX_NEW": "1536",
+        "FS_REPAIR_MAX_NEW": "768",
+
+        # Sampling
+        "FS_REPETITION_PENALTY": "1.15",
+    }
+
+    # Apple Silicon / Metal: request "max possible" GPU offload by default.
+    # llama.cpp will offload as much as it can, but may still fail on low memory,
+    # so we also add robust fallback in llm.py (see below).
+    if sys.platform == "darwin":
+        defaults["FS_GPU_LAYERS"] = "999"
+
+    for k, v in defaults.items():
+        os.environ.setdefault(k, v)
+
+
+apply_runtime_env_defaults()
+
+

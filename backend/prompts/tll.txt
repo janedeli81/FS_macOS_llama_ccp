@@ -3,27 +3,35 @@ Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 TAK
 Beschrijf de kern van de verdenking/tenlastelegging in gewone taal.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem geen namen/initialen/adressen/ID’s. Gebruik “betrokkene” en voor derden algemeen “slachtoffer” of “aangever”.
-- Geen wetsartikelen, parket-/zaaknummers of procedure.
-- Neem datum/periode/plaats/letsel alleen over als het letterlijk genoemd is.
-- Schrijf feitelijk, neutraal en in de verleden tijd.
+PRIORITEIT 1 — ANONIMITEIT
+- Noem geen namen/initialen/adressen/BSN. Gebruik "betrokkene" en algemeen "slachtoffer" of "aangever(aangeefster)".
+- Noem locaties alleen op stadsniveau (geen straat/instellingsnamen).
+- Als de tekst placeholders bevat ([DATUM_...], [LOCATIE_...]) — laat ze exact staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Verzin niets. Neem datum/periode/plaats/letsel alleen over als letterlijk genoemd.
+- Geen wetsartikelen, parket-/zaaknummers, procedure.
+- Schrijf geen “niet/geen” tenzij letterlijk aanwezig.
+- Feitelijk, neutraal, verleden tijd. Korte zinnen. Geen voornaamwoorden.
 
 OPDRACHT (MAP)
-Extraheer de kern van de verdenking als bullets.
+Extraheer de kern van de verdenking als bullets. Geen “Niet vermeld”.
 
 FORMAT (bullets; alleen invullen als genoemd)
 - Kernverdenking in gewone taal (1 zin):
-- Datum/periode en plaats:
+- Datum/periode en plaats (placeholders exact):
 - Tegen wie (algemeen):
-- Handelingen / geweld / middelen:
-- Gevolg / letsel / schade:
+- Handelingen/geweld/middelen:
+- Gevolg/letsel/schade:
 
 ---REDUCE---
-Schrijf een compacte samenvatting van de verdenking op basis van de onderstaande bullets.
+Schrijf een compacte samenvatting van de verdenking.
 
-EINDTEKST
-- 1 alinea (max. 4–6 zinnen).
-- Alleen: wat, wanneer, waar, tegen wie (algemeen), hoe.
+HARD REGELS
+- Voeg GEEN nieuwe feiten toe.
+- Placeholders exact laten staan. Geen datums/plaatsen “invullen”.
+
+EINDTEKST (1 alinea, max. 4–6 zinnen)
+- Start met: “Volgens de tenlastelegging wordt betrokkene verdacht van …”
+- Alleen: wat, wanneer, waar (stad), tegen wie (algemeen), hoe, gevolg (indien genoemd).
 - Geen procedure, geen artikelen, geen meta-tekst.

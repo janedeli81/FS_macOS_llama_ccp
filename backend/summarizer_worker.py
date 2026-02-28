@@ -203,6 +203,7 @@ class SummarizationWorker(QThread):
                     doc_type=doc_type,
                     text=text,
                     progress_callback=progress_cb,
+                    doc_name=filename,
                 )
 
             # 5) Save TXT

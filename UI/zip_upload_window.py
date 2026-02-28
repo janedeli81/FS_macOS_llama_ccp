@@ -56,11 +56,10 @@ class ZipUploadWindow(QWidget):
     - go to Documents Manager
     """
 
-    def __init__(self, state: Optional[AppState] = None, api_client=None):
+    def __init__(self, state: Optional[AppState] = None):
         super().__init__()
 
         self.state = state or AppState()
-        self.api_client = api_client  # Store API client
 
         self.setWindowTitle("Nieuw dossier (ZIP)")
         self.setMinimumSize(1100, 720)
@@ -363,7 +362,7 @@ class ZipUploadWindow(QWidget):
             self.progress_bar.setValue(100)
             self._set_ui_busy(False)
 
-            self.next_window = DocumentOverviewWindow(state=self.state, api_client=self.api_client)
+            self.next_window = DocumentOverviewWindow(state=self.state)
             self.next_window.show()
             self.close()
 
@@ -377,7 +376,7 @@ class ZipUploadWindow(QWidget):
         from UI.cases_list_window import CasesListWindow
 
         self.close()
-        self.prev = CasesListWindow(state=self.state, api_client=self.api_client)
+        self.prev = CasesListWindow(state=self.state)
         self.prev.show()
 
     def closeEvent(self, event):

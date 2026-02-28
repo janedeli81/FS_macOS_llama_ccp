@@ -1,47 +1,57 @@
 Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
 TAK
-Maak een anonieme, feitelijke samenvatting van een proces-verbaal (PV), geschikt voor een juridisch verslag. Focus op: toedracht volgens bronnen, verklaringen, objectieve bevindingen, en (indien genoemd) psychische toestand/middelengebruik.
+Maak een anonieme, feitelijke PV-samenvatting (proces-verbaal), geschikt voor een juridisch verslag.
+Focus op: toedracht volgens bronnen, verklaringen per rol, objectieve bevindingen, en (indien genoemd) psychische toestand/middelengebruik.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem nooit namen, initialen, geboortedata, leeftijden, adressen (straatniveau), nationaliteit, telefoonnummers, kentekens, BSN/ID’s. Gebruik:
-  - “betrokkene” = verdachte/onderzochte
-  - “aangever” (of “aangeefster” als dat expliciet blijkt) = degene die aangifte deed
-  - “getuige” = overige derden
-- Geen wetsartikelen, parket-/zaaknummers, procedurele stappen (aanhouding, handboeien, cautie, voorgeleiding, ondertekening, afsluitdatum dossier), tenzij er in zo’n passage een nieuwe inhoudelijke verklaring of relevante bevinding staat.
-- Vermijd het woord “bewijs”. Beschrijf concreet wat er werd gezien/verklaard/vastgesteld (alleen als het in de tekst staat).
-- Gebruik niet “toegeven” (gebruik “bekennen” of “zeggen”).
-- Schrijf neutraal, concreet en in de verleden tijd.
-- Letterlijke uitspraken van betrokkene die illustratief zijn: neem ze op tussen dubbele aanhalingstekens en cursief: *"..."*.
+PRIORITEIT 1 — ANONIMITEIT (HARD; controleer ELKE zin)
+- Gebruik bij voorkeur deze rollen: "betrokkene", "aangever"/"aangeefster", "getuige".
+- Nooit: namen, initialen, geboortedatum, leeftijd, adres/straatnaam/huisnummer, telefoon, e-mail, BSN/ID, kenteken, parket-/zaaknummers.
+- Vermijd: "man", "vrouw", "persoon", "hij", "zij", "genaamd", "met de naam".
+- Nooit: nummering/labels zoals "betrokkene 11" of "getuige 2".
+- Plaatsregel: noem alleen stad/gemeente/regio. Geen straatnamen/exacte locaties.
+- Als de bron placeholders bevat zoals [adres verwijderd], [BSN verwijderd], [geboortedatum verwijderd] — laat ze staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Verzin niets. Geen aannames. Geen interpretaties.
+- Gebruik bron-werkwoorden: "aangever verklaarde", "betrokkene verklaarde/ontkende", "getuige verklaarde", "uit onderzoek bleek", "camerabeelden lieten zien", "SEH/huisarts constateerde".
+- Neem bedragen/dates exact over als ze genoemd zijn. Als iets onduidelijk is: laat het weg.
+
+OVERIGE REGELS
+- Geen wetsartikelen en geen procedurele formaliteiten (cautie, ondertekening, etc.).
+- Vermijd het woord "bewijs". Beschrijf concreet wat werd gezien/verklaard/vastgesteld.
+- Verleden tijd. Neutraal en concreet.
 
 OPDRACHT (MAP)
-Extraheer uit deze passage alleen de feiten/verklaringen die later samen te voegen zijn. Houd strikt chronologie aan.
+Extraheer uit deze passage de controleerbare feiten/verklaringen die later tot één samenvatting kunnen worden samengevoegd.
 
-OUTPUT (max. 12–16 bullets; alleen wat in deze passage staat)
-- Kenmerk PV (als letterlijk aanwezig; noteer als __PLxxxx-xxxxxxxxx__):
-- Verdenking/feit (in gewone taal, zonder wetsartikelen; alleen als genoemd):
-- Tijd/periode/plaats (alleen als genoemd):
-- Rolrelaties (alleen indien relevant en genoemd, bv. ex-partner/buur):
-- Aanleiding volgens aangever/aangeefster (chronologisch, concreet):
-- Verloop volgens aangever/aangeefster (chronologisch, concreet):
-- Verloop/verklaring volgens betrokkene (tegen wie gezegd; incl. *"..."*):
-- Reactie betrokkene op de beschuldiging (bekennen/ontkennen/zwijgrecht; alleen als genoemd):
-- Getuigen/derden (alleen nieuwe inhoudelijke details):
-- Objectieve bevindingen (bv. camerabeelden/letsel/forensische sporen; beschrijf wat er te zien/gevonden was):
-- Psychische toestand/verwardheid (alleen als genoemd; wie zei/constateerde dit):
-- Middelengebruik (soort/hoeveelheid/frequentie; evt. bloed/urine-onderzoek als genoemd):
+OUTPUT (alleen bullets)
+- 6–12 bullets.
+- Elke bullet is één volledige zin (onderwerp + werkwoord).
+- Chronologisch waar mogelijk.
+- Geen kopjes, geen inleiding, geen "Niet vermeld"-zinnen.
+- Vermijd lange geldlijsten: noem maximaal 3 voorbeelden + eventueel totaal (alleen als letterlijk genoemd).
 
 ---REDUCE---
 Je combineert de onderstaande deelsamenvattingen tot één anonieme PV-samenvatting.
 
-EINDTEKST (doorlopende tekst, met alinea’s; geen bullets)
-1) Kenmerk (indien bekend) + korte omschrijving van de verdenking (zonder wetsartikelen).
-2) Aanleiding en verloop volgens aangever/aangeefster (chronologisch).
-3) Aanleiding en verloop volgens betrokkene (chronologisch; met *"..."* waar relevant).
-4) Getuigen/derden (alleen relevante aanvullingen).
-5) Objectieve bevindingen (concreet; geen “bewijs”).
-6) Psychische toestand / middelengebruik (alleen indien genoemd).
-7) Reactie betrokkene op de aangifte (incl. zwijgrecht indien genoemd).
+HARD REGELS
+- Geen namen/initialen/leeftijd/geboortedatum/adressen/postcodes/telefoons/e-mail/BSN/ID/zaaknummers.
+- Gebruik bij voorkeur rollen: betrokkene / aangever(aangeefster) / getuige.
+- Geen man/vrouw/persoon en geen hij/zij.
 
-Schrijf neutraal, concreet, zonder herhaling, zonder procedurele formaliteiten.
+KWALITEIT
+- Doorlopende tekst (geen bullets), met korte alinea’s.
+- Beknopt en feitelijk: ongeveer 8–14 zinnen.
+- Geen herhaling of doublures; elke zin grammaticaal volledig.
+- Gebruik bron-werkwoorden (aangever verklaarde…, uit onderzoek bleek…, camerabeelden lieten zien…, SEH/huisarts constateerde…).
+- Vermijd lange lijsten met bedragen; noem alleen totaal en/of 1–3 belangrijkste bedragen (alleen als letterlijk genoemd).
+- Laat onderdelen weg als er geen inhoud is (geen expliciete "Niet vermeld"-blokken).
+
+STRUCTUUR (impliciet; geen kopjes)
+1) Korte context + tijd/periode + plaats (alleen stad/gemeente/regio).
+2) Feiten en verklaringen per rol (chronologisch).
+3) Objectieve bevindingen/medische info (alleen indien genoemd).
+4) Psychische toestand/middelengebruik (alleen indien genoemd).
+
+Geen meta-tekst.

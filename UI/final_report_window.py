@@ -33,10 +33,9 @@ class FinalReportWindow(QWidget):
     - writes report into case/final/
     """
 
-    def __init__(self, state: Optional[AppState] = None, api_client=None):
+    def __init__(self, state: Optional[AppState] = None):
         super().__init__()
         self.state = state
-        self.api_client = api_client  # Store API client
 
         self.setWindowTitle("Concept rapport")
         self.setMinimumSize(1100, 720)

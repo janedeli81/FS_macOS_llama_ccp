@@ -1,37 +1,61 @@
 Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
 TAK
-Vat een reclasseringsrapport samen: leefsituatie, toezichtgeschiedenis, risico’s/beschermers en advies. Geen feitelijke delictdetails.
+Vat een reclasseringsrapport samen: leefsituatie, toezichtgeschiedenis, contact/medewerking, risico's/beschermers en advies.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem de onderzochte altijd “betrokkene”. Geen naam/leeftijd/geboortedatum/adres/nationaliteit/ID’s.
-- Geen wetsartikelen, parket-/zaaknummers, zitting/toetsing/rechter (procedureel).
-- Noem verdenking hoogstens algemeen en alleen als expliciet genoemd; geen incidentdetails.
-- Middelengebruik alleen als expliciet genoemd (met hoeveelheid/frequentie indien vermeld).
-- Geen markdown-kopjes/nummering; MAP=bullets, REDUCE=doorlopende tekst.
+PRIORITEIT 1 — ANONIMITEIT (controleer elk bullet)
+- Gebruik UITSLUITEND "betrokkene" (niet “de heer”, niet namen/initialen).
+- Nooit: naam, initialen, leeftijd, geboortedatum, adres, nationaliteit, BSN, telefoonnummers, zaak-/parketnummers.
+- Noem locaties alleen op stadsniveau (geen straat/instellingsnamen).
+- Als de tekst placeholders bevat ([DATUM_...], [LOCATIE_...], [adres verwijderd]) — laat ze exact staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Verzin niets. Geen aannames over risico, diagnose, motivatie of behandelbaarheid.
+- Schrijf geen “niet/geen/ontbreekt” tenzij dit letterlijk in de bron staat.
+- Delictdetails: benoem maximaal in algemene termen (bv. “mishandeling/bedreiging”), alleen als expliciet genoemd.
+
+PRIORITEIT 3 — KWALITEIT (GOLD)
+- Elke bullet en elke zin is grammaticaal volledig (onderwerp + werkwoord). Geen zinsfragmenten.
+- Gebruik bron-werkwoorden: “reclassering rapporteerde…”, “in het rapport stond…”, “betrokkene gaf aan…”.
+- Gebruik geen voornaamwoorden (“hij/zij”). Gebruik alleen rol-woorden (“betrokkene”, “reclassering”, “Veiligheidshuis”).
+- Geen meta-tekst. Geen herhaling.
 
 OPDRACHT (MAP)
-Extraheer kernpunten uit deze passage als bullets. Laat rubrieken weg die niet voorkomen. Verzin geen details.
+Extraheer kernpunten als bullets.
+- Geen “Niet vermeld”.
+- Voeg ALTIJD een bullet toe over contact/medewerking als dit in de passage staat (bv. “cliënt is niet gesproken”, “niet bereikbaar”, “reageerde niet op uitnodigingen”).
+- Als er OXREC/RISC-resultaten staan: neem deze expliciet op (categorie + kwalificatie + percentage).
+- Neem risico’s exact over zoals geformuleerd (bv. “kan niet worden ingeschat” of “hoog”).
 
-FORMAT (bullets)
-- Rapportgegevens (datum, auteur/instantie; alleen als genoemd):
-- Aanleiding/doel rapport (alleen als genoemd):
-- Bronnen/ingewonnen informatie (alleen als genoemd):
-- Medewerking/contact met betrokkene (alleen als genoemd):
-- Toezichtgeschiedenis (alleen als genoemd):
-- Leefsituatie (wonen/werk/dagbesteding/financiën/netwerk; alleen expliciet genoemd):
-- Psychische problematiek en zorg (alleen als genoemd; diagnose alleen als letterlijk benoemd):
-- Middelengebruik (alleen expliciet; details indien genoemd):
-- Risicofactoren en beschermende factoren (zoals letterlijk genoemd):
-- Risico-inschatting (alleen als genoemd):
-- Haalbaarheid/motivatie (alleen als genoemd):
-- Advies/voorwaarden/interventies (alleen als genoemd):
+FORMAT (bullets; alleen invullen als genoemd)
+- Verdacht/aanleiding rapport (in algemene termen):
+- Proceshouding (ontkent/erkent; alleen als genoemd):
+- Contact/medewerking (cliënt gesproken? bereikbaarheid/uitnodigingen; bron):
+- Zorgen uit wijk/gemeente / woonomgeving (wat werd gemeld; bron):
+- Vrijwillig hulpaanbod en reactie betrokkene (meewerken/weigeren; bron):
+- Leefsituatie (wonen/werk/dagbesteding/financiën/netwerk; alleen expliciet):
+- Risico-inschatting (recidive/letsel/onttrekking; exact):
+- OXREC/RISC (algemene recidive + geweldsrecidive; kwalificatie + %):
+- Advies bijzondere voorwaarden (bv. meldplicht, toezicht; alleen als genoemd):
+- Toelichting haalbaarheid (bijv. afhankelijk van bereidheid ter zitting; alleen als genoemd):
 
 ---REDUCE---
-Combineer de onderstaande bullets tot één reclasseringssamenvatting.
+Combineer de bullets tot één reclasseringssamenvatting.
 
-EINDTEKST
-- 2–3 alinea’s, professioneel.
-- Benoem: psychosociale situatie (alleen wat genoemd is), middelengebruik, risico’s/beschermers en advies/voorwaarden.
-- Geen delictdetails, geen procedure, geen meta-tekst.
+HARD REGELS
+- Voeg GEEN nieuwe feiten toe.
+- Geen namen/initialen/leeftijd/adres/BSN. Geen straatnamen/instellingsnamen.
+- Placeholders exact laten staan. Geen datums/locaties “invullen”.
+- Geen zinsfragmenten. Elke zin begint met een expliciet onderwerp (betrokkene/reclassering/Veiligheidshuis) + werkwoord.
+- Gebruik geen voornaamwoorden.
+
+STIJL (8–12 zinnen)
+- Start met: “Uit het reclasseringsrapport blijkt dat …”
+- Neem in elk geval op (als genoemd):
+  1) verdenking/aanleiding in algemene termen,
+  2) zorgen uit wijk/gemeente,
+  3) contact/medewerking (cliënt niet gesproken / niet bereikbaar),
+  4) risico’s (recidive/letsel/onttrekking) exact,
+  5) OXREC (kwalificatie + %),
+  6) advies (meldplicht/toezicht) + haalbaarheid.
+- Neutraal, feitelijk, professioneel Nederlands. Geen meta-tekst.

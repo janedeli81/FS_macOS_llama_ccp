@@ -41,10 +41,9 @@ from UI.final_report_window import FinalReportWindow
 
 
 class DossierDocumentsWindow(QWidget):
-    def __init__(self, state: Optional[AppState] = None, api_client=None):
+    def __init__(self, state: Optional[AppState] = None):
         super().__init__()
         self.state = state
-        self.api_client = api_client  # Store API client
 
         self.setWindowTitle("Samenvattingen")
         self.setMinimumSize(1100, 780)
@@ -405,59 +404,16 @@ class DossierDocumentsWindow(QWidget):
             self._update_progress_bar()
             return
 
-        # Check if user can process documents (trial or balance)
-        if self.api_client:
-            can_process = self._check_can_process_document()
-            if not can_process:
-                # Stop auto-summarization, show payment window
-                self._show_purchase_required_dialog()
-                return
-
         self._start_summarization_for_doc(next_doc.doc_id)
 
     def _start_summarization_for_doc(self, doc_id: str) -> None:
-        if self.state is None or self.state.case.summaries_dir is None or self.state. case.extracted_dir is None:
+        if self.state is None or self.state.case.summaries_dir is None or self.state.case.extracted_dir is None:
             QMessageBox.critical(self, "Fout", "Case directories are not initialized.")
             return
 
         doc = next((d for d in self.state.documents if d.doc_id == doc_id), None)
         if doc is None:
             return
-
-        # Deduct document from user's balance via API
-        if self.api_client:
-            self._append_log(f"Checking user balance for document: {doc.original_name}")
-            result = self.api_client.process_document(
-                document_name=doc.original_name,
-                case_id=self.state.case.case_id
-            )
-
-            if not result["success"]:
-                # Cannot process - show error and stop
-                error_msg = result.get("error", "Cannot process document")
-                self._append_log(f"ERROR: {error_msg}")
-
-                QMessageBox.warning(
-                    self,
-                    "Kan document niet verwerken",
-                    f"Fout bij het controleren van documentsaldo:\n\n{error_msg}\n\n"
-                    "Controleer je internetverbinding en probeer opnieuw."
-                )
-
-                # Mark as queued again so user can retry
-                doc.status = DOC_STATUS_QUEUED
-                self.state.save_manifest()
-                self.load_table()
-                return
-
-            # Success - log balance info
-            remaining = result.get("remaining_balance", 0)
-            was_trial = result.get("was_trial", False)
-
-            if was_trial:
-                self._append_log(f"✓ Document authorized (trial period)")
-            else:
-                self._append_log(f"✓ Document deducted from balance (remaining: {remaining})")
 
         self.resume_btn.setEnabled(False)
         self.current_doc_id = doc_id
@@ -602,68 +558,11 @@ class DossierDocumentsWindow(QWidget):
             shutil.copy2(src, dest)
         except Exception as e:
             QMessageBox.critical(self, "Fout", str(e))
-    def _check_can_process_document(self) -> bool:
-        """Check if user can process document (trial or has balance)"""
-        if not self.api_client:
-            # No API client - allow processing (offline mode)
-            return True
-
-        try:
-            status = self.api_client.get_user_status()
-            if not status:
-                # API error - allow processing to avoid blocking
-                return True
-
-            return status.get("can_process", False)
-
-        except Exception as e:
-            self.log(f"Warning: Could not check user status: {e}")
-            # On error, allow processing
-            return True
-
-    def _show_purchase_required_dialog(self) -> None:
-        """Show dialog when user needs to purchase documents"""
-        status = self.api_client.get_user_status() if self.api_client else None
-
-        if status and status.get("is_trial"):
-            # Trial ended
-            message = (
-                "Je gratis proefperiode is afgelopen.\n\n"
-                "Om door te gaan met het verwerken van documenten, "
-                "moet je een documentenpakket kopen.\n\n"
-                "Wil je nu een pakket kopen?"
-            )
-        else:
-            # No balance
-            remaining = status.get("documents_remaining", 0) if status else 0
-            message = (
-                f"Je hebt geen documenten meer over (saldo: {remaining}).\n\n"
-                "Om door te gaan met het verwerken van documenten, "
-                "moet je een documentenpakket kopen.\n\n"
-                "Wil je nu een pakket kopen?"
-            )
-
-        reply = QMessageBox.question(
-            self,
-            "Documentenpakket vereist",
-            message,
-            QMessageBox.Yes | QMessageBox.No
-        )
-
-        if reply == QMessageBox.Yes:
-            # Open purchase window
-            from UI.purchase_window import PurchaseWindow
-            self.purchase_window = PurchaseWindow(
-                state=self.state,
-                api_client=self.api_client,
-                parent_window=self
-            )
-            self.purchase_window.show()
 
     def open_final_report(self) -> None:
         if self.state is None:
             return
-        w = FinalReportWindow(self.state, api_client=self.api_client)
+        w = FinalReportWindow(self.state)
         w.show()
 
     def go_back(self) -> None:

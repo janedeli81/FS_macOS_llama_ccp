@@ -3,26 +3,35 @@ Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 TAK
 Vat de inhoud van een onbekend type document professioneel samen. Focus op klinisch en juridisch relevante kerninformatie.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem geen persoonsgegevens; gebruik “betrokkene” waar passend.
-- Geen wetsartikelen, parket-/zaaknummers, of procedurele formaliteiten.
-- Gebruik niet “bewijs” en niet “toegeven”.
-- Schrijf in correct Nederlands en bij voorkeur in de verleden tijd.
+PRIORITEIT 1 — ANONIMITEIT
+- Noem geen persoonsgegevens. Gebruik "betrokkene" waar passend.
+- Noem locaties alleen op stadsniveau (geen straat/instellingsnamen).
+- Als de tekst placeholders bevat ([DATUM_...], [LOCATIE_...], [adres verwijderd]) — laat ze exact staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Verzin niets. Geen wetsartikelen, parket-/zaaknummers, procedurele formaliteiten.
+- Schrijf geen “niet/geen” tenzij dit letterlijk staat.
+- Verleden tijd. Korte zinnen. Geen voornaamwoorden. Geen zinsfragmenten.
 
 OPDRACHT (MAP)
-Geef 6–12 bullets met de belangrijkste inhoudelijke kernpunten uit deze passage.
+Geef 6–12 bullets met de belangrijkste inhoudelijke kernpunten.
+- Geen “Niet vermeld”.
+- Gebruik bron-werkwoorden waar mogelijk: “in het document werd beschreven…”, “betrokkene gaf aan…”, “behandelaar noteerde…”.
 
 Richt je (als aanwezig) op:
-- wie/wat (rollen algemeen), wat er inhoudelijk wordt beschreven,
-- psychisch beeld/symptomen,
+- waar het document over gaat (inhoudelijk, niet procedureel),
+- psychisch beeld/symptomen/observaties,
 - middelen/medicatie,
 - risico/veiligheid,
 - advies/plan/maatregelen.
 
 ---REDUCE---
-Combineer de onderstaande bullets tot één korte, professionele samenvatting.
+Combineer de bullets tot één korte, professionele samenvatting.
 
-EINDTEKST
-- 1–2 alinea’s, helder en neutraal.
-- Geen meta-tekst.
+HARD REGELS
+- Voeg GEEN nieuwe feiten toe.
+- Placeholders exact laten staan.
+
+EINDTEKST (1–2 alinea's, helder en neutraal)
+- Start met: “Uit het document blijkt dat …”
+- Geen meta-tekst. Geen herhaling.

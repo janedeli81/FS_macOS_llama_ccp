@@ -1,38 +1,53 @@
 Je schrijft voor een forensisch-psychiatrisch/juridisch eindverslag.
 
 TAK
-Vat een (psychiatrisch/psychologisch) consultverslag (o.a. NIFP/voorgeleiding/spoedconsult) samen met focus op klinische inhoud: psychisch beeld, functioneren, veiligheid, middelen, behandeling en advies. Geen feitelijke delicttoedracht.
+Vat een consultverslag (NIFP/voorgeleiding/spoedconsult) samen met focus op klinische inhoud: psychisch beeld, functioneren, veiligheid, middelen, behandeling en advies.
 
-HARD REGELS
-- Gebruik uitsluitend informatie uit de tekst tussen [TEKST] en </TEKST>. Verzin niets.
-- Noem betrokkene altijd “betrokkene”. Geen naam/leeftijd/geboortedatum/adres/nationaliteit/ID’s.
+PRIORITEIT 1 — ANONIMITEIT (controleer elk bullet)
+- Gebruik UITSLUITEND "betrokkene". Nooit: naam, initialen, leeftijd, geboortedatum, adres, nationaliteit, BSN.
+- Noem locaties alleen op stadsniveau (geen straat/instellingsnamen).
+- Als de tekst placeholders bevat ([DATUM_...], [LOCATIE_...], [adres verwijderd]) — laat ze exact staan.
+
+PRIORITEIT 2 — ALLEEN WAT IN DE TEKST STAAT
+- Verzin niets. Geen diagnoses die niet letterlijk worden genoemd.
+- Diagnose/kwalificaties alleen als letterlijk vermeld; anders beschrijf als "klachten/symptomen".
+- Schrijf geen “niet/geen” tenzij dit letterlijk is genoteerd.
+
+KWALITEIT
+- Gebruik bron-werkwoorden: “rapporteur noteerde…”, “betrokkene gaf aan…”, “in het consult werd geobserveerd…”.
+- Geen voornaamwoorden. Elke zin = onderwerp + werkwoord. Korte zinnen. Verleden tijd.
 - Geen wetsartikelen, parket-/zaaknummers, procedurele/administratieve tekst.
-- Delictdetails: alleen algemeen “het ten laste gelegde” en uitsluitend subjectieve beleving/verklaring van betrokkene (geen toedracht).
-- Schrijf in correct Nederlands en in de verleden tijd.
-- Geen markdown-kopjes/nummering; MAP=bullets, REDUCE=doorlopende tekst.
+- Delictdetails: alleen “het ten laste gelegde” en uitsluitend subjectieve beleving van betrokkene.
+- Geen markdown-kopjes.
 
 OPDRACHT (MAP)
-Noteer kernpunten uit deze passage als bullets. Laat rubrieken weg die niet voorkomen.
+Noteer kernpunten als bullets. Laat rubrieken weg die niet voorkomen. Geen “Niet vermeld”.
 
 FORMAT (bullets)
 - Rapportgegevens (datum, auteur, discipline/rol; alleen als genoemd):
-- Setting / wijze van contact (alleen als genoemd):
-- Medewerking / contact / betrouwbaarheid (alleen als genoemd):
+- Setting/wijze van contact (alleen als genoemd):
+- Medewerking/contact/betrouwbaarheid (alleen als genoemd):
 - Verklaring betrokkene over het ten laste gelegde (subjectief; geen toedracht):
-- Psychiatrische/psychologische voorgeschiedenis en eerdere zorg (alleen als genoemd):
-- Psychische symptomen (alleen als genoemd):
-- Cognitie / oriëntatie / denken / realiteitstoetsing (alleen als genoemd):
+- Voorgeschiedenis en eerdere zorg (alleen als genoemd):
+- Psychische symptomen/observaties (alleen als genoemd):
+- Cognitie/oriëntatie/denken/realiteitstoetsing (alleen als genoemd):
 - Middelengebruik (alleen als genoemd):
 - Medicatie (alleen als genoemd):
 - Veiligheid (suïcidaliteit/zelfbeschadiging/agressie/risico; alleen als genoemd):
-- Klinische indruk / (mogelijke) diagnose(s) (alleen als expliciet genoemd):
-- Advies / plan (zorgbehoefte, vervolg, indicatie PJ; alleen als genoemd):
-- Justitiële antecedenten (alleen als genoemd; kort: jaar – delict/soort – afdoening/status):
+- Klinische indruk/(mogelijke) diagnose(s) (alleen als expliciet genoemd):
+- Advies/plan (zorgbehoefte, vervolg; alleen als genoemd):
 
 ---REDUCE---
-Combineer de onderstaande bullets tot één consultsamenvatting.
+Combineer de bullets tot één consultsamenvatting.
 
-EINDTEKST
-- 1–2 korte alinea’s, professioneel.
-- Benoem: klinische indruk, middelengebruik (als genoemd), veiligheid/risico (als genoemd) en advies/plan (als genoemd).
-- Geen delictbeschrijving, geen procedure, geen meta-tekst.
+HARD REGELS
+- Voeg GEEN nieuwe feiten toe.
+- Placeholders exact laten staan. Geen datums/locaties “invullen”.
+- Alleen rol-woorden (“betrokkene”, “rapporteur”). Geen voornaamwoorden.
+
+STIJL
+- Start met: “Uit het consultverslag blijkt dat …”
+- 1–2 korte alinea’s:
+  1) klinisch beeld/observaties + functioneren,
+  2) middelen/medicatie + veiligheid/risico + advies (indien genoemd).
+- Geen delictbeschrijving, geen procedure, geen meta-tekst. Geen herhaling.
